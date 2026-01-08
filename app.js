@@ -1,4 +1,38 @@
 // Navigation entre sections
+let loadedThemeData = {};
+let loadedLetterTemplates = {};
+
+// Charger les données au démarrage
+async function initializeData() {
+    try {
+        // Essayer de charger depuis le storage (données modifiées via admin)
+        const themesStorage = await window.storage.get('themes-data', true);
+        const lettersStorage = await window.storage.get('letter-templates', true);
+        
+        if (themesStorage && themesStorage.value) {
+            loadedThemeData = JSON.parse(themesStorage.value);
+            console.log('Thèmes chargés depuis le storage admin');
+        } else {
+            // Fallback sur les données par défaut
+            loadedThemeData = typeof themeData !== 'undefined' ? themeData : {};
+            console.log('Thèmes chargés depuis les fichiers par défaut');
+        }
+        
+        if (lettersStorage && lettersStorage.value) {
+            loadedLetterTemplates = JSON.parse(lettersStorage.value);
+            console.log('Courriers chargés depuis le storage admin');
+        } else {
+            // Fallback sur les données par défaut
+            loadedLetterTemplates = typeof letterTemplates !== 'undefined' ? letterTemplates : {};
+            console.log('Courriers chargés depuis les fichiers par défaut');
+        }
+    } catch (error) {
+        console.log('Erreur chargement storage, utilisation des données par défaut:', error);
+        loadedThemeData = typeof themeData !== 'undefined' ? themeData : {};
+        loadedLetterTemplates = typeof letterTemplates !== 'undefined' ? letterTemplates : {};
+    }
+}
+
 function showTheme(themeId) {
     const homeSection = document.getElementById('home-section');
     const contentSection = document.getElementById('content-section');
@@ -13,16 +47,16 @@ function showTheme(themeId) {
     contentSection.classList.add('active');
     
     // Charger le contenu du thème
-    if (themeData[themeId]) {
+    if (loadedThemeData[themeId]) {
         contentArea.innerHTML = `
-            <h2>${themeData[themeId].title}</h2>
-            ${themeData[themeId].content}
+            <h2>${loadedThemeData[themeId].title}</h2>
+            ${loadedThemeData[themeId].content}
         `;
     } else {
         contentArea.innerHTML = `
             <h2>Thématique en construction</h2>
             <p>Cette section est en cours de développement. Le contenu sera ajouté prochainement.</p>
-            <p>N'hésitez pas à contribuer au projet sur GitHub !</p>
+            <p>N'hésitez pas à contribuer au projet !</p>
         `;
     }
     
@@ -71,8 +105,8 @@ function generateLetter(letterType) {
     const letterOutput = document.getElementById('letter-output');
     const letterText = document.getElementById('letter-text');
     
-    if (letterTemplates[letterType]) {
-        letterText.textContent = letterTemplates[letterType].template;
+    if (loadedLetterTemplates[letterType]) {
+        letterText.textContent = loadedLetterTemplates[letterType].template;
         letterOutput.classList.add('active');
         
         // Scroll vers le courrier
@@ -92,7 +126,7 @@ function copyLetter() {
         // Feedback visuel
         const copyBtn = document.querySelector('.copy-btn');
         const originalText = copyBtn.textContent;
-        copyBtn.textContent = '✓ Copié !';
+        copyBtn.textContent = 'Copié !';
         copyBtn.style.background = '#22c55e';
         
         setTimeout(() => {
@@ -106,6 +140,11 @@ function copyLetter() {
 
 // Recherche (fonction de base à améliorer)
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialiser les données au chargement
+    initializeData().then(() => {
+        console.log('Données initialisées');
+    });
+    
     const searchInput = document.getElementById('search-input');
     
     if (searchInput) {
