@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration - Handroit Libre</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Quill Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -16,15 +21,13 @@
             font-family: 'Lexend', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 1rem;
         }
 
         .container {
             width: 100%;
             max-width: 1400px;
+            margin: 0 auto;
         }
 
         .login-box {
@@ -33,7 +36,7 @@
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             max-width: 400px;
-            margin: 0 auto;
+            margin: 5rem auto;
         }
 
         .admin-panel {
@@ -42,6 +45,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             overflow: hidden;
             display: none;
+            margin-top: 2rem;
         }
 
         .admin-panel.active {
@@ -73,26 +77,23 @@
 
         input[type="password"],
         input[type="text"],
-        textarea {
+        input[type="url"] {
             width: 100%;
             padding: 0.75rem;
             border: 2px solid #e5e7eb;
             border-radius: 6px;
             font-family: 'Lexend', sans-serif;
             font-size: 1rem;
-            transition: border-color 0.3s;
         }
 
-        input:focus,
-        textarea:focus {
+        input:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        textarea {
-            min-height: 200px;
-            resize: vertical;
-            font-family: monospace;
+        .ql-container {
+            min-height: 300px;
+            font-family: 'Lexend', sans-serif;
         }
 
         button {
@@ -105,24 +106,22 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
         }
 
         button:hover {
             background: #5568d3;
         }
 
-        button:focus {
-            outline: 3px solid rgba(102, 126, 234, 0.4);
-            outline-offset: 2px;
-        }
-
         .btn-logout {
             background: #dc2626;
         }
 
-        .btn-logout:hover {
-            background: #b91c1c;
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-add {
+            background: #10b981;
         }
 
         .admin-header {
@@ -132,6 +131,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .admin-content {
@@ -155,10 +156,6 @@
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-        }
-
-        .tab:hover {
-            color: #667eea;
         }
 
         .tab.active {
@@ -187,11 +184,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .theme-item h3 {
             font-size: 1.1rem;
-            color: #1a1a1a;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
         }
 
         .btn-edit {
@@ -200,63 +202,44 @@
             font-size: 0.9rem;
         }
 
-        .btn-edit:hover {
-            background: #2563eb;
+        .success-message, .error-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
         }
 
         .success-message {
             background: #10b981;
             color: white;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
         }
 
         .error-message {
             background: #ef4444;
             color: white;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            display: none;
         }
 
-        .error-message.show {
+        .success-message.show, .error-message.show {
             display: block;
-        }
-
-        .editor-help {
-            background: #fef3c7;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
             .admin-header {
                 flex-direction: column;
-                gap: 1rem;
                 text-align: center;
             }
-
-            .admin-content {
-                padding: 1rem;
+            .theme-item {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Login Box -->
         <div id="login-box" class="login-box">
             <h1>Administration</h1>
-            <p style="margin-bottom: 2rem; color: #6b7280;">Connexion à l'interface d'administration de Handroit Libre</p>
+            <p style="margin-bottom: 2rem; color: #6b7280;">Handroit Libre</p>
             
             <div id="error-login" class="error-message"></div>
             
@@ -269,48 +252,52 @@
             </form>
         </div>
 
-        <!-- Admin Panel -->
         <div id="admin-panel" class="admin-panel">
             <div class="admin-header">
                 <div>
                     <h1>Administration Handroit Libre</h1>
-                    <p style="opacity: 0.9;">Gestion du contenu de la plateforme</p>
+                    <p style="opacity: 0.9;">Gestion du contenu</p>
                 </div>
                 <button class="btn-logout" onclick="logout()">Déconnexion</button>
             </div>
 
             <div class="admin-content">
                 <div id="success-message" class="success-message"></div>
+                <div id="error-message-main" class="error-message"></div>
 
                 <div class="tabs">
                     <button class="tab active" onclick="switchTab('themes')">Thématiques</button>
                     <button class="tab" onclick="switchTab('courriers')">Modèles de courriers</button>
-                    <button class="tab" onclick="switchTab('settings')">Paramètres</button>
+                    <button class="tab" onclick="switchTab('ressources')">Ressources</button>
                 </div>
 
-                <!-- Tab: Thématiques -->
                 <div id="tab-themes" class="tab-content active">
-                    <h2>Gestion des thématiques</h2>
-                    
-                    <div class="editor-help">
-                        <strong>Aide :</strong> Vous pouvez utiliser du HTML dans le contenu. Balises courantes : &lt;h3&gt; pour les sous-titres, &lt;p&gt; pour les paragraphes, &lt;ul&gt;&lt;li&gt; pour les listes, &lt;strong&gt; pour le gras.
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2>Thématiques</h2>
+                        <button class="btn-add" onclick="addNewTheme()">Nouvelle thématique</button>
                     </div>
 
                     <div id="themes-list" class="theme-list"></div>
 
                     <div id="theme-editor" style="display: none;">
-                        <h3>Éditer la thématique</h3>
+                        <h3 id="editor-title">Éditer la thématique</h3>
                         <form onsubmit="saveTheme(event)">
                             <input type="hidden" id="edit-theme-id">
+                            <input type="hidden" id="edit-theme-is-new">
                             
+                            <div class="form-group">
+                                <label for="edit-theme-key">Identifiant (URL, sans espaces ni accents)</label>
+                                <input type="text" id="edit-theme-key" required pattern="[a-z0-9-]+" placeholder="ex: nouvelle-thematique">
+                            </div>
+
                             <div class="form-group">
                                 <label for="edit-theme-title">Titre</label>
                                 <input type="text" id="edit-theme-title" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="edit-theme-content">Contenu (HTML)</label>
-                                <textarea id="edit-theme-content" required></textarea>
+                                <label>Contenu (éditeur visuel)</label>
+                                <div id="editor-container"></div>
                             </div>
 
                             <button type="submit">Enregistrer</button>
@@ -319,16 +306,25 @@
                     </div>
                 </div>
 
-                <!-- Tab: Courriers -->
                 <div id="tab-courriers" class="tab-content">
-                    <h2>Gestion des modèles de courriers</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2>Modèles de courriers</h2>
+                        <button class="btn-add" onclick="addNewCourrier()">Nouveau modèle</button>
+                    </div>
+                    
                     <div id="courriers-list" class="theme-list"></div>
 
                     <div id="courrier-editor" style="display: none;">
-                        <h3>Éditer le modèle de courrier</h3>
+                        <h3 id="courrier-editor-title">Éditer le modèle</h3>
                         <form onsubmit="saveCourrier(event)">
                             <input type="hidden" id="edit-courrier-id">
+                            <input type="hidden" id="edit-courrier-is-new">
                             
+                            <div class="form-group">
+                                <label for="edit-courrier-key">Identifiant (sans espaces ni accents)</label>
+                                <input type="text" id="edit-courrier-key" required pattern="[a-z0-9-]+" placeholder="ex: nouveau-courrier">
+                            </div>
+
                             <div class="form-group">
                                 <label for="edit-courrier-title">Titre</label>
                                 <input type="text" id="edit-courrier-title" required>
@@ -336,7 +332,7 @@
 
                             <div class="form-group">
                                 <label for="edit-courrier-template">Modèle de courrier</label>
-                                <textarea id="edit-courrier-template" required style="min-height: 400px;"></textarea>
+                                <textarea id="edit-courrier-template" required style="width: 100%; min-height: 400px; font-family: monospace; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 6px;"></textarea>
                             </div>
 
                             <button type="submit">Enregistrer</button>
@@ -345,21 +341,9 @@
                     </div>
                 </div>
 
-                <!-- Tab: Paramètres -->
-                <div id="tab-settings" class="tab-content">
-                    <h2>Paramètres</h2>
-                    
-                    <div class="form-group">
-                        <label for="new-password">Changer le mot de passe</label>
-                        <input type="password" id="new-password" placeholder="Nouveau mot de passe">
-                        <button onclick="changePassword()" style="margin-top: 0.5rem;">Mettre à jour</button>
-                    </div>
-
-                    <hr style="margin: 2rem 0; border: none; border-top: 2px solid #e5e7eb;">
-
-                    <h3>Actions</h3>
-                    <button onclick="exportData()" style="background: #10b981; margin-top: 1rem;">Exporter toutes les données</button>
-                    <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.9rem;">Télécharge un fichier JSON avec tout le contenu</p>
+                <div id="tab-ressources" class="tab-content">
+                    <h2>Ressources et liens utiles</h2>
+                    <p style="color: #6b7280; margin-bottom: 2rem;">Section à venir pour gérer les associations, sources légales, etc.</p>
                 </div>
             </div>
         </div>
@@ -368,39 +352,45 @@
     <script src="themes-data.js"></script>
     <script src="courriers-templates.js"></script>
     <script>
-        // Mot de passe par défaut (à changer !)
         const DEFAULT_PASSWORD = 'handroit2025';
-        
         let isAuthenticated = false;
         let currentThemeData = {};
         let currentLetterTemplates = {};
+        let quillEditor = null;
 
-        // Charger les données depuis le storage ou depuis les fichiers JS
+        // Simuler window.storage si non disponible (pour tests locaux)
+        if (!window.storage) {
+            window.storage = {
+                data: {},
+                async get(key, shared) {
+                    const item = this.data[key];
+                    return item ? { key, value: item, shared } : null;
+                },
+                async set(key, value, shared) {
+                    this.data[key] = value;
+                    return { key, value, shared };
+                },
+                async delete(key, shared) {
+                    delete this.data[key];
+                    return { key, deleted: true, shared };
+                }
+            };
+        }
+
         async function loadData() {
             try {
-                // Essayer de charger depuis le storage
                 const themesStorage = await window.storage.get('themes-data', true);
                 const lettersStorage = await window.storage.get('letter-templates', true);
                 
-                if (themesStorage) {
-                    currentThemeData = JSON.parse(themesStorage.value);
-                } else {
-                    currentThemeData = typeof themeData !== 'undefined' ? {...themeData} : {};
-                }
-                
-                if (lettersStorage) {
-                    currentLetterTemplates = JSON.parse(lettersStorage.value);
-                } else {
-                    currentLetterTemplates = typeof letterTemplates !== 'undefined' ? {...letterTemplates} : {};
-                }
+                currentThemeData = themesStorage ? JSON.parse(themesStorage.value) : (typeof themeData !== 'undefined' ? {...themeData} : {});
+                currentLetterTemplates = lettersStorage ? JSON.parse(lettersStorage.value) : (typeof letterTemplates !== 'undefined' ? {...letterTemplates} : {});
             } catch (error) {
-                console.error('Erreur chargement données:', error);
+                console.error('Erreur:', error);
                 currentThemeData = typeof themeData !== 'undefined' ? {...themeData} : {};
                 currentLetterTemplates = typeof letterTemplates !== 'undefined' ? {...letterTemplates} : {};
             }
         }
 
-        // Login
         function login(event) {
             event.preventDefault();
             const password = document.getElementById('password').value;
@@ -420,15 +410,12 @@
             }
         }
 
-        // Logout
         function logout() {
             isAuthenticated = false;
             document.getElementById('login-box').style.display = 'block';
             document.getElementById('admin-panel').classList.remove('active');
-            document.getElementById('password').value = '';
         }
 
-        // Switch tabs
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -437,7 +424,6 @@
             document.getElementById('tab-' + tabName).classList.add('active');
         }
 
-        // Load themes list
         function loadThemesList() {
             const list = document.getElementById('themes-list');
             list.innerHTML = '';
@@ -448,55 +434,113 @@
                 item.innerHTML = `
                     <div>
                         <h3>${theme.title}</h3>
-                        <p style="color: #6b7280; margin-top: 0.25rem; font-size: 0.9rem;">ID: ${id}</p>
+                        <p style="color: #6b7280; font-size: 0.9rem;">ID: ${id}</p>
                     </div>
-                    <button class="btn-edit" onclick="editTheme('${id}')">Éditer</button>
+                    <div class="btn-group">
+                        <button class="btn-edit" onclick="editTheme('${id}')">Éditer</button>
+                        <button class="btn-danger" onclick="deleteTheme('${id}')" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Supprimer</button>
+                    </div>
                 `;
                 list.appendChild(item);
             }
         }
 
-        // Edit theme
-        function editTheme(themeId) {
-            const theme = currentThemeData[themeId];
-            document.getElementById('edit-theme-id').value = themeId;
-            document.getElementById('edit-theme-title').value = theme.title;
-            document.getElementById('edit-theme-content').value = theme.content.trim();
+        function addNewTheme() {
+            document.getElementById('editor-title').textContent = 'Nouvelle thématique';
+            document.getElementById('edit-theme-id').value = '';
+            document.getElementById('edit-theme-is-new').value = 'true';
+            document.getElementById('edit-theme-key').value = '';
+            document.getElementById('edit-theme-key').disabled = false;
+            document.getElementById('edit-theme-title').value = '';
+            
+            if (!quillEditor) {
+                quillEditor = new Quill('#editor-container', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline'],
+                            [{ 'header': [3, 4, false] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link'],
+                            ['clean']
+                        ]
+                    }
+                });
+            }
+            quillEditor.root.innerHTML = '';
             
             document.getElementById('themes-list').style.display = 'none';
             document.getElementById('theme-editor').style.display = 'block';
         }
 
-        // Save theme
+        function editTheme(themeId) {
+            const theme = currentThemeData[themeId];
+            document.getElementById('editor-title').textContent = 'Éditer la thématique';
+            document.getElementById('edit-theme-id').value = themeId;
+            document.getElementById('edit-theme-is-new').value = 'false';
+            document.getElementById('edit-theme-key').value = themeId;
+            document.getElementById('edit-theme-key').disabled = true;
+            document.getElementById('edit-theme-title').value = theme.title;
+            
+            if (!quillEditor) {
+                quillEditor = new Quill('#editor-container', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline'],
+                            [{ 'header': [3, 4, false] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link'],
+                            ['clean']
+                        ]
+                    }
+                });
+            }
+            quillEditor.root.innerHTML = theme.content.trim();
+            
+            document.getElementById('themes-list').style.display = 'none';
+            document.getElementById('theme-editor').style.display = 'block';
+        }
+
         async function saveTheme(event) {
             event.preventDefault();
             
-            const themeId = document.getElementById('edit-theme-id').value;
+            const isNew = document.getElementById('edit-theme-is-new').value === 'true';
+            const themeKey = document.getElementById('edit-theme-key').value;
+            const themeId = isNew ? themeKey : document.getElementById('edit-theme-id').value;
             const title = document.getElementById('edit-theme-title').value;
-            const content = document.getElementById('edit-theme-content').value;
+            const content = quillEditor.root.innerHTML;
             
-            currentThemeData[themeId] = {
-                title: title,
-                content: content
-            };
+            currentThemeData[themeId] = { title, content };
             
             try {
                 await window.storage.set('themes-data', JSON.stringify(currentThemeData), true);
-                showSuccess('Thématique enregistrée avec succès !');
+                showSuccess('Thématique enregistrée !');
                 cancelEdit();
                 loadThemesList();
             } catch (error) {
-                alert('Erreur lors de l\'enregistrement : ' + error.message);
+                showError('Erreur : ' + error.message);
             }
         }
 
-        // Cancel edit
+        async function deleteTheme(themeId) {
+            if (confirm('Supprimer cette thématique ?')) {
+                delete currentThemeData[themeId];
+                try {
+                    await window.storage.set('themes-data', JSON.stringify(currentThemeData), true);
+                    showSuccess('Thématique supprimée !');
+                    loadThemesList();
+                } catch (error) {
+                    showError('Erreur : ' + error.message);
+                }
+            }
+        }
+
         function cancelEdit() {
             document.getElementById('themes-list').style.display = 'grid';
             document.getElementById('theme-editor').style.display = 'none';
         }
 
-        // Load courriers list
         function loadCourriersList() {
             const list = document.getElementById('courriers-list');
             list.innerHTML = '';
@@ -507,18 +551,37 @@
                 item.innerHTML = `
                     <div>
                         <h3>${courrier.title}</h3>
-                        <p style="color: #6b7280; margin-top: 0.25rem; font-size: 0.9rem;">ID: ${id}</p>
+                        <p style="color: #6b7280; font-size: 0.9rem;">ID: ${id}</p>
                     </div>
-                    <button class="btn-edit" onclick="editCourrier('${id}')">Éditer</button>
+                    <div class="btn-group">
+                        <button class="btn-edit" onclick="editCourrier('${id}')">Éditer</button>
+                        <button class="btn-danger" onclick="deleteCourrier('${id}')" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Supprimer</button>
+                    </div>
                 `;
                 list.appendChild(item);
             }
         }
 
-        // Edit courrier
+        function addNewCourrier() {
+            document.getElementById('courrier-editor-title').textContent = 'Nouveau modèle de courrier';
+            document.getElementById('edit-courrier-id').value = '';
+            document.getElementById('edit-courrier-is-new').value = 'true';
+            document.getElementById('edit-courrier-key').value = '';
+            document.getElementById('edit-courrier-key').disabled = false;
+            document.getElementById('edit-courrier-title').value = '';
+            document.getElementById('edit-courrier-template').value = '';
+            
+            document.getElementById('courriers-list').style.display = 'none';
+            document.getElementById('courrier-editor').style.display = 'block';
+        }
+
         function editCourrier(courrierId) {
             const courrier = currentLetterTemplates[courrierId];
+            document.getElementById('courrier-editor-title').textContent = 'Éditer le modèle de courrier';
             document.getElementById('edit-courrier-id').value = courrierId;
+            document.getElementById('edit-courrier-is-new').value = 'false';
+            document.getElementById('edit-courrier-key').value = courrierId;
+            document.getElementById('edit-courrier-key').disabled = true;
             document.getElementById('edit-courrier-title').value = courrier.title;
             document.getElementById('edit-courrier-template').value = courrier.template;
             
@@ -526,67 +589,57 @@
             document.getElementById('courrier-editor').style.display = 'block';
         }
 
-        // Save courrier
         async function saveCourrier(event) {
             event.preventDefault();
             
-            const courrierId = document.getElementById('edit-courrier-id').value;
+            const isNew = document.getElementById('edit-courrier-is-new').value === 'true';
+            const courrierKey = document.getElementById('edit-courrier-key').value;
+            const courrierId = isNew ? courrierKey : document.getElementById('edit-courrier-id').value;
             const title = document.getElementById('edit-courrier-title').value;
             const template = document.getElementById('edit-courrier-template').value;
             
-            currentLetterTemplates[courrierId] = {
-                title: title,
-                template: template
-            };
+            currentLetterTemplates[courrierId] = { title, template };
             
             try {
                 await window.storage.set('letter-templates', JSON.stringify(currentLetterTemplates), true);
-                showSuccess('Modèle de courrier enregistré avec succès !');
+                showSuccess('Modèle de courrier enregistré !');
                 cancelEditCourrier();
                 loadCourriersList();
             } catch (error) {
-                alert('Erreur lors de l\'enregistrement : ' + error.message);
+                showError('Erreur : ' + error.message);
             }
         }
 
-        // Cancel edit courrier
+        async function deleteCourrier(courrierId) {
+            if (confirm('Supprimer ce modèle de courrier ?')) {
+                delete currentLetterTemplates[courrierId];
+                try {
+                    await window.storage.set('letter-templates', JSON.stringify(currentLetterTemplates), true);
+                    showSuccess('Modèle supprimé !');
+                    loadCourriersList();
+                } catch (error) {
+                    showError('Erreur : ' + error.message);
+                }
+            }
+        }
+
         function cancelEditCourrier() {
             document.getElementById('courriers-list').style.display = 'grid';
             document.getElementById('courrier-editor').style.display = 'none';
         }
 
-        // Show success message
         function showSuccess(message) {
-            const successDiv = document.getElementById('success-message');
-            successDiv.textContent = message;
-            successDiv.classList.add('show');
-            setTimeout(() => {
-                successDiv.classList.remove('show');
-            }, 3000);
+            const div = document.getElementById('success-message');
+            div.textContent = message;
+            div.classList.add('show');
+            setTimeout(() => div.classList.remove('show'), 3000);
         }
 
-        // Change password
-        function changePassword() {
-            const newPass = document.getElementById('new-password').value;
-            if (newPass) {
-                alert('Fonctionnalité à venir : changement de mot de passe');
-            }
-        }
-
-        // Export data
-        function exportData() {
-            const data = {
-                themes: currentThemeData,
-                letters: currentLetterTemplates,
-                exportDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'handroit-libre-backup-' + new Date().toISOString().split('T')[0] + '.json';
-            a.click();
+        function showError(message) {
+            const div = document.getElementById('error-message-main');
+            div.textContent = message;
+            div.classList.add('show');
+            setTimeout(() => div.classList.remove('show'), 5000);
         }
     </script>
 </body>
