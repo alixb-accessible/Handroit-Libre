@@ -182,15 +182,191 @@
             </section>
         </main>
 
-        <footer>
+       <footer>
             <div class="container">
                 <p><strong>Handipass</strong> - Plateforme gratuite et accessible</p>
-                <p>Les informations fournies sont à titre informatif et ne constituent pas un conseil juridique personnalisé.</p>
+                <p style="margin: 0.5rem 0;">
+                     Les informations sont fournies à titre informatif uniquement. 
+                    <a href="#" onclick="showMentions(); return false;" style="color: #3b82f6; text-decoration: underline; font-weight: 600;">Lire les mentions légales et la politique de confidentialité</a>
+                </p>
                 <p>En cas de doute, consultez un avocat spécialisé ou une association de défense des droits.</p>
                 <p class="ti-racoon">Propulsé par Ti Racoon</p>
             </div>
         </footer>
     </div>
+
+    <!-- Section Mentions Légales (cachée par défaut) -->
+    <section id="mentions-section" class="content-section" style="display: none;">
+        <div class="container">
+            <button class="back-btn" onclick="closeMentions()">Retour</button>
+            
+            <h2>Mentions Légales et Politique de Confidentialité</h2>
+            
+            <div style="background: #fef3c7; border-left: 4px solid #fbbf24; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+                <p style="font-weight: 600;"> Important : Ces informations sont essentielles pour comprendre vos droits et nos engagements.</p>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">1. Éditeur du site</h3>
+          <p>
+    <strong>Handipass</strong> est une plateforme gratuite d'information juridique sur les droits des personnes en situation de handicap.<br>
+    Propulsé par Ti Racoon<br>
+    <a href="#contact-form" onclick="document.getElementById('contact-name').focus(); return false;" style="color: #3b82f6; text-decoration: underline;">Nous contacter via le formulaire</a>
+</p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">2. Nature des informations diffusées</h3>
+            <p>
+                Les informations présentes sur Handipass sont fournies <strong>à titre purement informatif et documentaire</strong>. 
+                Elles ne constituent en aucun cas :
+            </p>
+            <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+                <li>Un conseil juridique personnalisé</li>
+                <li>Une consultation juridique</li>
+                <li>Un avis professionnel</li>
+                <li>Une garantie de résultat dans vos démarches</li>
+            </ul>
+            <p>
+                Handipass ne peut se substituer à l'accompagnement d'un avocat spécialisé, d'un juriste ou d'une association de défense des droits.
+            </p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">3. Décharge de responsabilité</h3>
+            <p><strong>Handipass décline toute responsabilité concernant :</strong></p>
+            <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+                <li>L'usage qui est fait des informations diffusées sur la plateforme</li>
+                <li>Les conséquences résultant de l'utilisation des modèles de courriers</li>
+                <li>L'exactitude, l'exhaustivité ou l'actualité des informations fournies</li>
+                <li>Les décisions prises par les utilisateurs sur la base de ces informations</li>
+                <li>Les résultats de démarches administratives ou contentieuses entreprises</li>
+            </ul>
+            <p>
+                Les textes législatifs et réglementaires évoluent régulièrement. <strong>Il appartient à chaque utilisateur de vérifier l'actualité des informations</strong> 
+                auprès des sources officielles (Légifrance, sites gouvernementaux, MDPH, etc.).
+            </p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">4. Modèles de courriers</h3>
+            <p>
+                Les modèles de courriers proposés sont fournis <strong>à titre d'exemple uniquement</strong>. Ils doivent impérativement être :
+            </p>
+            <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+                <li>Adaptés à votre situation personnelle</li>
+                <li>Vérifiés et complétés selon votre contexte</li>
+                <li>Validés, si nécessaire, par un professionnel du droit</li>
+            </ul>
+            <p>
+                <strong>Handipass ne saurait être tenu responsable</strong> de l'inadéquation d'un modèle à une situation particulière ou des conséquences de son utilisation.
+            </p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">5. Politique de confidentialité et protection des données (RGPD)</h3>
+            
+            <h4 style="margin-top: 1rem; color: #374151;">5.1 Données collectées</h4>
+            <p>Handipass collecte uniquement :</p>
+            <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+                <li><strong>Votre adresse email</strong> lors de l'inscription, utilisée exclusivement pour l'authentification et l'accès à la plateforme</li>
+            </ul>
+            <p><strong>Aucune autre donnée personnelle n'est collectée, stockée ou traitée.</strong></p>
+
+            <h4 style="margin-top: 1rem; color: #374151;">5.2 Données des courriers générés</h4>
+            <p style="background: #dcfce7; padding: 1rem; border-left: 4px solid #22c55e; border-radius: 4px;">
+                <strong>GARANTIE DE CONFIDENTIALITÉ :</strong> Les informations que vous saisissez dans les formulaires de courriers 
+                (nom, adresse, téléphone, motifs, etc.) sont traitées <strong>uniquement dans votre navigateur</strong>. 
+                <strong>Aucune de ces données n'est envoyée, stockée ou conservée</strong> sur nos serveurs ou ailleurs. 
+                Dès que vous quittez la page, ces informations disparaissent définitivement.
+            </p>
+
+            <h4 style="margin-top: 1rem; color: #374151;">5.3 Stockage des données</h4>
+            <p>
+                Les données (email et session de connexion) sont stockées localement dans votre navigateur via la technologie "localStorage". 
+                Elles ne sont <strong>jamais transmises à des tiers</strong> et restent sur votre appareil.
+            </p>
+
+            <h4 style="margin-top: 1rem; color: #374151;">5.4 Vos droits (RGPD)</h4>
+            <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+            <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+                <li><strong>Droit d'accès :</strong> Vous pouvez consulter les données vous concernant (votre email)</li>
+                <li><strong>Droit de rectification :</strong> Vous pouvez modifier votre email</li>
+                <li><strong>Droit à l'effacement :</strong> Vous pouvez supprimer votre compte à tout moment en effaçant les données de votre navigateur</li>
+                <li><strong>Droit d'opposition :</strong> Vous pouvez refuser l'utilisation de vos données en ne créant pas de compte</li>
+            </ul>
+            <p>Pour exercer ces droits, vous pouvez effacer vos données de navigation ou nous contacter via le formulaire ci-dessous</p>
+
+            <h4 style="margin-top: 1rem; color: #374151;">5.5 Cookies</h4>
+            <p>
+                Handipass n'utilise <strong>aucun cookie de tracking ou de publicité</strong>. 
+                Le localStorage est utilisé uniquement pour maintenir votre session de connexion active.
+            </p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">6. Propriété intellectuelle</h3>
+            <p>
+                Le contenu de Handipass (structure, textes, modèles) est protégé par le droit d'auteur. 
+                Toute reproduction, même partielle, est interdite sans autorisation préalable, sauf pour un usage strictement personnel.
+            </p>
+            <p>
+                Les textes de loi cités sont issus de sources officielles (Légifrance) et appartiennent au domaine public.
+            </p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">7. Liens externes</h3>
+            <p>
+                Handipass peut contenir des liens vers des sites externes (Légifrance, Défenseur des droits, etc.). 
+                Nous ne sommes pas responsables du contenu, de la disponibilité ou des politiques de confidentialité de ces sites tiers.
+            </p>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">8. Recommandations importantes</h3>
+            <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+                <p style="font-weight: 600; margin-bottom: 0.5rem;"> Nous vous recommandons vivement :</p>
+                <ul style="margin-left: 1.5rem;">
+                    <li>De consulter un avocat spécialisé en droit du handicap pour toute démarche contentieuse</li>
+                    <li>De vous rapprocher d'associations de défense des droits (APF, UNAPEI, etc.) pour un accompagnement personnalisé</li>
+                    <li>De vérifier systématiquement les informations sur les sites officiels</li>
+                    <li>De ne jamais engager de procédure sans avoir validé votre stratégie avec un professionnel</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: #1a1a1a;">9. Modification des mentions légales</h3>
+            <p>
+                Handipass se réserve le droit de modifier à tout moment les présentes mentions légales. 
+                Les utilisateurs sont invités à les consulter régulièrement.
+            </p>
+
+           <h3 style="margin-top: 2rem; color: #1a1a1a;">10. Contact</h3>
+<p>
+    Pour toute question concernant ces mentions légales ou la politique de confidentialité, 
+    utilisez le formulaire ci-dessous :
+</p>
+
+<form action="https://formspree.io/f/mjggvoov" method="POST" style="max-width: 600px; margin-top: 1.5rem;">
+    <div class="form-group">
+        <label for="contact-name">Votre nom</label>
+        <input type="text" id="contact-name" name="name" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="contact-email-form">Votre email</label>
+        <input type="email" id="contact-email-form" name="email" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="contact-subject">Sujet</label>
+        <input type="text" id="contact-subject" name="subject" required placeholder="Ex: Question sur les mentions légales">
+    </div>
+    
+    <div class="form-group">
+        <label for="contact-message">Votre message</label>
+        <textarea id="contact-message" name="message" required style="min-height: 150px;" placeholder="Décrivez votre demande..."></textarea>
+    </div>
+    
+    <button type="submit" class="btn">Envoyer le message</button>
+</form>
+
+<p style="margin-top: 1rem; font-size: 0.9rem; color: #6b7280;">
+     Vos données sont envoyées de manière sécurisée et ne sont utilisées que pour répondre à votre demande.
+</p>
+
+            <p style="margin-top: 2rem; font-style: italic; color: #6b7280;">
+                Dernière mise à jour : Janvier 2026
+            </p>
+
+            <button class="back-btn" onclick="closeMentions()" style="margin-top: 2rem;">Retour à l'accueil</button>
+        </div>
+    </section>
 
     <!-- Scripts -->
     <script src="auth.js"></script>
