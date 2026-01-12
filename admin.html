@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administration - Handroit Libre</title>
+    <title>Administration - Handipass</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Quill Editor -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- Accessibility Toolbar -->
+    <link rel="stylesheet" href="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.css">
+    <script src="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.js" defer></script>
     
     <style>
         * {
@@ -19,46 +23,82 @@
 
         body {
             font-family: 'Lexend', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, 
+                #4a4a4a 0%, #4a4a4a 14.28%,
+                #22c55e 14.28%, #22c55e 28.56%,
+                #3b82f6 28.56%, #3b82f6 42.84%,
+                #ffffff 42.84%, #ffffff 57.12%,
+                #fbbf24 57.12%, #fbbf24 71.4%,
+                #dc2626 71.4%, #dc2626 85.68%,
+                #4a4a4a 85.68%, #4a4a4a 100%);
             min-height: 100vh;
-            padding: 1rem;
+            padding: 2rem;
         }
 
         .container {
-            width: 100%;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .login-box {
             background: white;
-            padding: 3rem;
+            padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            max-width: 500px;
-            margin: 5rem auto;
-        }
-
-        .admin-panel {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-            display: none;
-            margin-top: 2rem;
-        }
-
-        .admin-panel.active {
-            display: block;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
         h1 {
             color: #1a1a1a;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             font-size: 2rem;
         }
 
-        h2 {
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #6b7280;
+            font-weight: 600;
+            font-family: 'Lexend', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .section h2 {
             color: #1a1a1a;
             margin-bottom: 1rem;
             font-size: 1.5rem;
@@ -75,8 +115,10 @@
             color: #1a1a1a;
         }
 
-        input[type="password"],
-        input[type="text"] {
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
             width: 100%;
             padding: 0.75rem;
             border: 2px solid #e5e7eb;
@@ -85,653 +127,538 @@
             font-size: 1rem;
         }
 
-        input:focus {
+        input:focus,
+        textarea:focus,
+        select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #3b82f6;
         }
 
-        .ql-container {
-            min-height: 300px;
-            font-family: 'Lexend', sans-serif;
+        textarea {
+            min-height: 200px;
+            resize: vertical;
         }
 
-        button {
-            background: #667eea;
+        .btn {
+            background: #3b82f6;
             color: white;
             padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 6px;
             font-family: 'Lexend', sans-serif;
-            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            transition: background 0.3s;
         }
 
-        button:hover {
-            background: #5568d3;
+        .btn:hover {
+            background: #2563eb;
         }
 
-        button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
+        .btn-secondary {
+            background: #6b7280;
         }
 
-        .btn-logout {
-            background: #dc2626;
+        .btn-secondary:hover {
+            background: #4b5563;
         }
 
         .btn-danger {
             background: #dc2626;
         }
 
-        .btn-add {
-            background: #10b981;
+        .btn-danger:hover {
+            background: #b91c1c;
         }
 
-        .admin-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
+        .btn-success {
+            background: #22c55e;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .variable-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .admin-content {
-            padding: 2rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #e5e7eb;
-            overflow-x: auto;
-        }
-
-        .tab {
-            padding: 1rem 1.5rem;
-            background: none;
+        .variable-btn {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 0.5rem 1rem;
             border: none;
-            border-bottom: 3px solid transparent;
-            color: #6b7280;
-            font-weight: 600;
+            border-radius: 6px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.9rem;
             cursor: pointer;
-            white-space: nowrap;
+            transition: background 0.3s;
         }
 
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
+        .variable-btn:hover {
+            background: #c7d2fe;
         }
 
-        .tab-content {
-            display: none;
+        .item-list {
+            list-style: none;
+            margin-top: 1rem;
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        .theme-list {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .theme-item {
-            background: #f9fafb;
+        .item-list li {
+            background: white;
             padding: 1rem;
-            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
         }
 
-        .theme-item h3 {
-            font-size: 1.1rem;
-        }
-
-        .btn-group {
+        .item-actions {
             display: flex;
             gap: 0.5rem;
         }
 
-        .btn-edit {
-            background: #3b82f6;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
         }
 
-        .success-message, .error-message, .info-message {
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #22c55e;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-free {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-restricted {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        small {
+            display: block;
+            margin-top: 0.25rem;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .help-text {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
             padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            display: none;
+            margin: 1rem 0;
+            border-radius: 4px;
         }
 
         .success-message {
-            background: #10b981;
-            color: white;
+            background: #d1fae5;
+            border-left: 4px solid #22c55e;
+            color: #065f46;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            display: none;
         }
 
-        .error-message {
-            background: #ef4444;
-            color: white;
-        }
-
-        .info-message {
-            background: #fef3c7;
-            color: #92400e;
-            border: 2px solid #fbbf24;
-        }
-
-        .success-message.show, .error-message.show, .info-message.show {
+        .success-message.show {
             display: block;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #6b7280;
-        }
-
-        @media (max-width: 768px) {
-            .admin-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .theme-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="login-box" class="login-box">
-            <h1>Administration</h1>
-            <p style="margin-bottom: 2rem; color: #6b7280;">Handroit Libre</p>
-            
-            <div id="error-login" class="error-message"></div>
-            
-            <form onsubmit="login(event)">
-                <div class="form-group">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" required autocomplete="current-password">
-                </div>
-                
-                <div class="form-group">
-                    <label for="github-token">Token GitHub</label>
-                    <input type="password" id="github-token" required autocomplete="off" placeholder="ghp_...">
-                    <p style="font-size: 0.85rem; color: #6b7280; margin-top: 0.5rem;">
-                        Votre token fine-grained avec accès "Contents: Read and write" au repo Handroit-Libre
-                    </p>
-                </div>
-                
-                <button type="submit" style="width: 100%;">Se connecter</button>
-            </form>
+        <h1>Administration Handipass</h1>
+        <p class="subtitle">Gérez les thématiques et les modèles de courriers</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('themes')">Thématiques</button>
+            <button class="tab" onclick="switchTab('courriers')">Courriers</button>
         </div>
 
-        <div id="admin-panel" class="admin-panel">
-            <div class="admin-header">
-                <div>
-                    <h1>Administration Handroit Libre</h1>
-                    <p style="opacity: 0.9;">Édition directe via GitHub API</p>
+        <!-- Onglet Thématiques -->
+        <div id="tab-themes" class="tab-content active">
+            <div class="section">
+                <h2>Gestion des thématiques</h2>
+                <div class="help-text">
+                    <strong>Libre / Réservé :</strong> Les thématiques libres sont accessibles à tous. Les thématiques réservées nécessitent une connexion.
                 </div>
-                <button class="btn-logout" onclick="logout()">Déconnexion</button>
+
+                <ul class="item-list" id="themes-list"></ul>
             </div>
 
-            <div class="admin-content">
-                <div id="success-message" class="success-message"></div>
-                <div id="error-message-main" class="error-message"></div>
-                <div id="info-message" class="info-message"></div>
-
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('themes')">Thématiques</button>
-                    <button class="tab" onclick="switchTab('courriers')">Modèles de courriers</button>
+            <div class="section">
+                <h2>Modifier une thématique</h2>
+                <div class="form-group">
+                    <label for="theme-select">Sélectionnez une thématique</label>
+                    <select id="theme-select" onchange="loadThemeForEdit()">
+                        <option value="">-- Choisir --</option>
+                    </select>
                 </div>
 
-                <div id="tab-themes" class="tab-content active">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h2>Thématiques</h2>
-                        <button class="btn-add" onclick="addNewTheme()">Nouvelle thématique</button>
+                <div id="theme-editor" style="display: none;">
+                    <div class="form-group">
+                        <label for="theme-title">Titre</label>
+                        <input type="text" id="theme-title">
                     </div>
 
-                    <div id="themes-loading" class="loading">Chargement des données depuis GitHub...</div>
-                    <div id="themes-list" class="theme-list" style="display: none;"></div>
-
-                    <div id="theme-editor" style="display: none;">
-                        <h3 id="editor-title">Éditer la thématique</h3>
-                        <form onsubmit="saveTheme(event)">
-                            <input type="hidden" id="edit-theme-id">
-                            <input type="hidden" id="edit-theme-is-new">
-                            
-                            <div class="form-group">
-                                <label for="edit-theme-key">Identifiant (URL, sans espaces ni accents)</label>
-                                <input type="text" id="edit-theme-key" required pattern="[a-z0-9-]+" placeholder="ex: nouvelle-thematique">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit-theme-title">Titre</label>
-                                <input type="text" id="edit-theme-title" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Contenu (éditeur visuel)</label>
-                                <div id="editor-container"></div>
-                            </div>
-
-                            <button type="submit" id="save-theme-btn">Enregistrer</button>
-                            <button type="button" onclick="cancelEdit()" style="background: #6b7280; margin-left: 0.5rem;">Annuler</button>
-                        </form>
+                    <div class="form-group">
+                        <label for="theme-description">Description courte</label>
+                        <input type="text" id="theme-description">
                     </div>
+
+                    <div class="form-group">
+                        <label for="theme-content">Contenu complet (HTML autorisé)</label>
+                        <textarea id="theme-content"></textarea>
+                    </div>
+
+                    <button class="btn btn-success" onclick="saveTheme()">Enregistrer les modifications</button>
+                    <div id="theme-success" class="success-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Courriers -->
+        <div id="tab-courriers" class="tab-content">
+            <div class="section">
+                <h2>Gestion des courriers</h2>
+                <div class="help-text">
+                    <strong>Libre / Réservé :</strong> Les courriers libres sont accessibles à tous. Les courriers réservés nécessitent une connexion.
                 </div>
 
-                <div id="tab-courriers" class="tab-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h2>Modèles de courriers</h2>
-                        <button class="btn-add" onclick="addNewCourrier()">Nouveau modèle</button>
+                <ul class="item-list" id="courriers-list"></ul>
+            </div>
+
+            <div class="section">
+                <h2>Modifier un courrier</h2>
+                <div class="form-group">
+                    <label for="courrier-select">Sélectionnez un courrier</label>
+                    <select id="courrier-select" onchange="loadCourrierForEdit()">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                </div>
+
+                <div id="courrier-editor" style="display: none;">
+                    <div class="form-group">
+                        <label for="courrier-title">Titre du courrier</label>
+                        <input type="text" id="courrier-title">
                     </div>
-                    
-                    <div id="courriers-loading" class="loading">Chargement des données depuis GitHub...</div>
-                    <div id="courriers-list" class="theme-list" style="display: none;"></div>
 
-                    <div id="courrier-editor" style="display: none;">
-                        <h3 id="courrier-editor-title">Éditer le modèle</h3>
-                        <form onsubmit="saveCourrier(event)">
-                            <input type="hidden" id="edit-courrier-id">
-                            <input type="hidden" id="edit-courrier-is-new">
-                            
-                            <div class="form-group">
-                                <label for="edit-courrier-key">Identifiant (sans espaces ni accents)</label>
-                                <input type="text" id="edit-courrier-key" required pattern="[a-z0-9-]+" placeholder="ex: nouveau-courrier">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit-courrier-title">Titre</label>
-                                <input type="text" id="edit-courrier-title" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit-courrier-template">Modèle de courrier</label>
-                                <textarea id="edit-courrier-template" required style="width: 100%; min-height: 400px; font-family: monospace; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 6px;"></textarea>
-                            </div>
-
-                            <button type="submit" id="save-courrier-btn">Enregistrer</button>
-                            <button type="button" onclick="cancelEditCourrier()" style="background: #6b7280; margin-left: 0.5rem;">Annuler</button>
-                        </form>
+                    <div class="help-text">
+                        <strong>Insérer des variables :</strong> Cliquez sur un bouton pour insérer une variable dans le modèle.
                     </div>
+
+                    <div class="variable-buttons">
+                        <button class="variable-btn" onclick="insertVariable('nom')">{{nom}}</button>
+                        <button class="variable-btn" onclick="insertVariable('adresse')">{{adresse}}</button>
+                        <button class="variable-btn" onclick="insertVariable('code_postal')">{{code_postal}}</button>
+                        <button class="variable-btn" onclick="insertVariable('ville')">{{ville}}</button>
+                        <button class="variable-btn" onclick="insertVariable('telephone')">{{telephone}}</button>
+                        <button class="variable-btn" onclick="insertVariable('email')">{{email}}</button>
+                        <button class="variable-btn" onclick="insertVariable('date')">{{date}}</button>
+                        <button class="variable-btn" onclick="insertVariable('motif')">{{motif}}</button>
+                        <button class="variable-btn" onclick="insertVariable('numero_decision')">{{numero_decision}}</button>
+                        <button class="variable-btn" onclick="insertVariable('date_decision')">{{date_decision}}</button>
+                        <button class="variable-btn" onclick="createCustomVariable()">+ Variable personnalisée</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courrier-template">Modèle du courrier</label>
+                        <textarea id="courrier-template" style="min-height: 400px;"></textarea>
+                        <small>Utilisez les variables {{nom}}, {{adresse}}, etc. Le système les détectera automatiquement et créera les champs de formulaire.</small>
+                    </div>
+
+                    <button class="btn btn-success" onclick="saveCourrier()">Enregistrer les modifications</button>
+                    <div id="courrier-success" class="success-message"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const DEFAULT_PASSWORD = 'handroit2025';
-        const GITHUB_REPO = 'alixb-accessible/Handroit-Libre';
-        
-        let githubToken = '';
-        let isAuthenticated = false;
-        let currentThemeData = {};
-        let currentLetterTemplates = {};
-        let themesSHA = '';
-        let courriersSHA = '';
-        let quillEditor = null;
+        // Charger les données
+        let themeData = {};
+        let letterTemplates = {};
 
-        async function fetchGitHubFile(path) {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
-                headers: {
-                    'Authorization': `Bearer ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            
-            if (!response.ok) throw new Error(`Erreur GitHub: ${response.status}`);
-            return await response.json();
+        // Charger depuis les fichiers JS
+        function loadExternalData() {
+            const script1 = document.createElement('script');
+            script1.src = 'themes-data.js';
+            script1.onload = () => {
+                themeData = window.themeData || {};
+                populateThemesList();
+                populateThemeSelect();
+            };
+            document.body.appendChild(script1);
+
+            const script2 = document.createElement('script');
+            script2.src = 'courriers-templates.js';
+            script2.onload = () => {
+                letterTemplates = window.letterTemplates || {};
+                populateCouriersList();
+                populateCourrierSelect();
+            };
+            document.body.appendChild(script2);
         }
 
-        async function updateGitHubFile(path, content, sha, message) {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${githubToken}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: message,
-                    content: btoa(unescape(encodeURIComponent(content))),
-                    sha: sha
-                })
-            });
-            
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || `Erreur GitHub: ${response.status}`);
-            }
-            return await response.json();
-        }
+        // Onglets
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-        async function loadDataFromGitHub() {
-            try {
-                showInfo('Chargement depuis GitHub...');
-                
-                const themesFile = await fetchGitHubFile('themes-data.js');
-                const courriersFile = await fetchGitHubFile('courriers-templates.js');
-                
-                themesSHA = themesFile.sha;
-                courriersSHA = courriersFile.sha;
-                
-                const themesContent = decodeURIComponent(escape(atob(themesFile.content)));
-                const courriersContent = decodeURIComponent(escape(atob(courriersFile.content)));
-                
-                const themesMatch = themesContent.match(/const themeData = ({[\s\S]*?});/);
-                const courriersMatch = courriersContent.match(/const letterTemplates = ({[\s\S]*?});/);
-                
-                if (themesMatch) {
-                    currentThemeData = eval('(' + themesMatch[1] + ')');
-                }
-                
-                if (courriersMatch) {
-                    currentLetterTemplates = eval('(' + courriersMatch[1] + ')');
-                }
-                
-                hideInfo();
-                return true;
-            } catch (error) {
-                showError('Erreur chargement GitHub: ' + error.message);
-                return false;
+            if (tab === 'themes') {
+                document.querySelector('[onclick="switchTab(\'themes\')"]').classList.add('active');
+                document.getElementById('tab-themes').classList.add('active');
+            } else {
+                document.querySelector('[onclick="switchTab(\'courriers\')"]').classList.add('active');
+                document.getElementById('tab-courriers').classList.add('active');
             }
         }
 
-        function login(event) {
-            event.preventDefault();
-            const password = document.getElementById('password').value;
-            const token = document.getElementById('github-token').value;
-            
-            if (password !== DEFAULT_PASSWORD) {
-                showLoginError('Mot de passe incorrect');
+        // Remplir la liste des thématiques
+        function populateThemesList() {
+            const list = document.getElementById('themes-list');
+            list.innerHTML = '';
+
+            Object.keys(themeData).forEach(themeId => {
+                const theme = themeData[themeId];
+                const isRestricted = theme.restricted === true;
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div>
+                        <strong>${theme.title}</strong>
+                        <span class="status-badge ${isRestricted ? 'status-restricted' : 'status-free'}">
+                            ${isRestricted ? 'Réservé' : 'Libre'}
+                        </span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${isRestricted ? '' : 'checked'} onchange="toggleThemeAccess('${themeId}', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // Remplir la liste des courriers
+        function populateCouriersList() {
+            const list = document.getElementById('courriers-list');
+            list.innerHTML = '';
+
+            Object.keys(letterTemplates).forEach(courrierId => {
+                const courrier = letterTemplates[courrierId];
+                const isRestricted = courrier.restricted === true;
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div>
+                        <strong>${courrier.title}</strong>
+                        <span class="status-badge ${isRestricted ? 'status-restricted' : 'status-free'}">
+                            ${isRestricted ? 'Réservé' : 'Libre'}
+                        </span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${isRestricted ? '' : 'checked'} onchange="toggleCourrierAccess('${courrierId}', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        // Toggle accès thématique
+        function toggleThemeAccess(themeId, isFree) {
+            themeData[themeId].restricted = !isFree;
+            saveDataToFile('themes-data.js', 'themeData', themeData);
+            populateThemesList();
+        }
+
+        // Toggle accès courrier
+        function toggleCourrierAccess(courrierId, isFree) {
+            letterTemplates[courrierId].restricted = !isFree;
+            saveDataToFile('courriers-templates.js', 'letterTemplates', letterTemplates);
+            populateCouriersList();
+        }
+
+        // Remplir le select des thématiques
+        function populateThemeSelect() {
+            const select = document.getElementById('theme-select');
+            select.innerHTML = '<option value="">-- Choisir --</option>';
+
+            Object.keys(themeData).forEach(themeId => {
+                const option = document.createElement('option');
+                option.value = themeId;
+                option.textContent = themeData[themeId].title;
+                select.appendChild(option);
+            });
+        }
+
+        // Charger une thématique pour édition
+        function loadThemeForEdit() {
+            const themeId = document.getElementById('theme-select').value;
+            if (!themeId) {
+                document.getElementById('theme-editor').style.display = 'none';
                 return;
             }
-            
-            githubToken = token;
-            localStorage.setItem('github_token', token);
-            
-            document.getElementById('login-box').style.display = 'none';
-            document.getElementById('admin-panel').classList.add('active');
-            
-            loadDataFromGitHub().then(success => {
-                if (success) {
-                    loadThemesList();
-                    loadCourriersList();
-                    isAuthenticated = true;
-                }
+
+            const theme = themeData[themeId];
+            document.getElementById('theme-title').value = theme.title;
+            document.getElementById('theme-description').value = theme.description || '';
+            document.getElementById('theme-content').value = theme.content || '';
+            document.getElementById('theme-editor').style.display = 'block';
+        }
+
+        // Sauvegarder une thématique
+        function saveTheme() {
+            const themeId = document.getElementById('theme-select').value;
+            if (!themeId) return;
+
+            themeData[themeId].title = document.getElementById('theme-title').value;
+            themeData[themeId].description = document.getElementById('theme-description').value;
+            themeData[themeId].content = document.getElementById('theme-content').value;
+
+            saveDataToFile('themes-data.js', 'themeData', themeData);
+
+            const successMsg = document.getElementById('theme-success');
+            successMsg.textContent = 'Thématique enregistrée avec succès !';
+            successMsg.classList.add('show');
+            setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+            populateThemesList();
+            populateThemeSelect();
+        }
+
+        // Remplir le select des courriers
+        function populateCourrierSelect() {
+            const select = document.getElementById('courrier-select');
+            select.innerHTML = '<option value="">-- Choisir --</option>';
+
+            Object.keys(letterTemplates).forEach(courrierId => {
+                const option = document.createElement('option');
+                option.value = courrierId;
+                option.textContent = letterTemplates[courrierId].title;
+                select.appendChild(option);
             });
         }
 
-        function logout() {
-            localStorage.removeItem('github_token');
-            location.reload();
-        }
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
-        }
-
-        function loadThemesList() {
-            const list = document.getElementById('themes-list');
-            const loading = document.getElementById('themes-loading');
-            
-            list.innerHTML = '';
-            
-            for (const [id, theme] of Object.entries(currentThemeData)) {
-                const item = document.createElement('div');
-                item.className = 'theme-item';
-                item.innerHTML = `
-                    <div>
-                        <h3>${theme.title}</h3>
-                        <p style="color: #6b7280; font-size: 0.9rem;">ID: ${id}</p>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn-edit" onclick="editTheme('${id}')">Éditer</button>
-                    </div>
-                `;
-                list.appendChild(item);
+        // Charger un courrier pour édition
+        function loadCourrierForEdit() {
+            const courrierId = document.getElementById('courrier-select').value;
+            if (!courrierId) {
+                document.getElementById('courrier-editor').style.display = 'none';
+                return;
             }
-            
-            loading.style.display = 'none';
-            list.style.display = 'grid';
-        }
 
-        function addNewTheme() {
-            document.getElementById('editor-title').textContent = 'Nouvelle thématique';
-            document.getElementById('edit-theme-id').value = '';
-            document.getElementById('edit-theme-is-new').value = 'true';
-            document.getElementById('edit-theme-key').value = '';
-            document.getElementById('edit-theme-key').disabled = false;
-            document.getElementById('edit-theme-title').value = '';
-            
-            if (!quillEditor) {
-                quillEditor = new Quill('#editor-container', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            ['bold', 'italic', 'underline'],
-                            [{ 'header': [3, 4, false] }],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                            ['link'],
-                            ['clean']
-                        ]
-                    }
-                });
-            }
-            quillEditor.root.innerHTML = '';
-            
-            document.getElementById('themes-list').style.display = 'none';
-            document.getElementById('theme-editor').style.display = 'block';
-        }
-
-        function editTheme(themeId) {
-            const theme = currentThemeData[themeId];
-            document.getElementById('editor-title').textContent = 'Éditer la thématique';
-            document.getElementById('edit-theme-id').value = themeId;
-            document.getElementById('edit-theme-is-new').value = 'false';
-            document.getElementById('edit-theme-key').value = themeId;
-            document.getElementById('edit-theme-key').disabled = true;
-            document.getElementById('edit-theme-title').value = theme.title;
-            
-            if (!quillEditor) {
-                quillEditor = new Quill('#editor-container', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            ['bold', 'italic', 'underline'],
-                            [{ 'header': [3, 4, false] }],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                            ['link'],
-                            ['clean']
-                        ]
-                    }
-                });
-            }
-            quillEditor.root.innerHTML = theme.content.trim();
-            
-            document.getElementById('themes-list').style.display = 'none';
-            document.getElementById('theme-editor').style.display = 'block';
-        }
-
-        async function saveTheme(event) {
-            event.preventDefault();
-            
-            const saveBtn = document.getElementById('save-theme-btn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Enregistrement...';
-            
-            try {
-                const isNew = document.getElementById('edit-theme-is-new').value === 'true';
-                const themeKey = document.getElementById('edit-theme-key').value;
-                const themeId = isNew ? themeKey : document.getElementById('edit-theme-id').value;
-                const title = document.getElementById('edit-theme-title').value;
-                const content = quillEditor.root.innerHTML;
-                
-                currentThemeData[themeId] = { title, content };
-                
-                const fileContent = `// Base de données des thématiques juridiques\n// Chaque thème contient son titre et son contenu en HTML\n\nconst themeData = ${JSON.stringify(currentThemeData, null, 4)};\n\n// Export pour utilisation dans app.js\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = themeData;\n}`;
-                
-                const result = await updateGitHubFile('themes-data.js', fileContent, themesSHA, `Mise à jour: ${title}`);
-                themesSHA = result.content.sha;
-                
-                showSuccess('Thématique enregistrée sur GitHub ! Les changements seront visibles dans quelques secondes.');
-                cancelEdit();
-                loadThemesList();
-            } catch (error) {
-                showError('Erreur: ' + error.message);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = 'Enregistrer';
-            }
-        }
-
-        function cancelEdit() {
-            document.getElementById('themes-list').style.display = 'grid';
-            document.getElementById('theme-editor').style.display = 'none';
-        }
-
-        function loadCourriersList() {
-            const list = document.getElementById('courriers-list');
-            const loading = document.getElementById('courriers-loading');
-            
-            list.innerHTML = '';
-            
-            for (const [id, courrier] of Object.entries(currentLetterTemplates)) {
-                const item = document.createElement('div');
-                item.className = 'theme-item';
-                item.innerHTML = `
-                    <div>
-                        <h3>${courrier.title}</h3>
-                        <p style="color: #6b7280; font-size: 0.9rem;">ID: ${id}</p>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn-edit" onclick="editCourrier('${id}')">Éditer</button>
-                    </div>
-                `;
-                list.appendChild(item);
-            }
-            
-            loading.style.display = 'none';
-            list.style.display = 'grid';
-        }
-
-        function addNewCourrier() {
-            document.getElementById('courrier-editor-title').textContent = 'Nouveau modèle de courrier';
-            document.getElementById('edit-courrier-id').value = '';
-            document.getElementById('edit-courrier-is-new').value = 'true';
-            document.getElementById('edit-courrier-key').value = '';
-            document.getElementById('edit-courrier-key').disabled = false;
-            document.getElementById('edit-courrier-title').value = '';
-            document.getElementById('edit-courrier-template').value = '';
-            
-            document.getElementById('courriers-list').style.display = 'none';
+            const courrier = letterTemplates[courrierId];
+            document.getElementById('courrier-title').value = courrier.title;
+            document.getElementById('courrier-template').value = courrier.template;
             document.getElementById('courrier-editor').style.display = 'block';
         }
 
-        function editCourrier(courrierId) {
-            const courrier = currentLetterTemplates[courrierId];
-            document.getElementById('courrier-editor-title').textContent = 'Éditer le modèle de courrier';
-            document.getElementById('edit-courrier-id').value = courrierId;
-            document.getElementById('edit-courrier-is-new').value = 'false';
-            document.getElementById('edit-courrier-key').value = courrierId;
-            document.getElementById('edit-courrier-key').disabled = true;
-            document.getElementById('edit-courrier-title').value = courrier.title;
-            document.getElementById('edit-courrier-template').value = courrier.template;
-            
-            document.getElementById('courriers-list').style.display = 'none';
-            document.getElementById('courrier-editor').style.display = 'block';
+        // Insérer une variable
+        function insertVariable(variableName) {
+            const textarea = document.getElementById('courrier-template');
+            const cursorPos = textarea.selectionStart;
+            const textBefore = textarea.value.substring(0, cursorPos);
+            const textAfter = textarea.value.substring(cursorPos);
+
+            textarea.value = textBefore + `{{${variableName}}}` + textAfter;
+            textarea.focus();
+            textarea.setSelectionRange(cursorPos + variableName.length + 4, cursorPos + variableName.length + 4);
         }
 
-        async function saveCourrier(event) {
-            event.preventDefault();
-            
-            const saveBtn = document.getElementById('save-courrier-btn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Enregistrement...';
-            
-            try {
-                const isNew = document.getElementById('edit-courrier-is-new').value === 'true';
-                const courrierKey = document.getElementById('edit-courrier-key').value;
-                const courrierId = isNew ? courrierKey : document.getElementById('edit-courrier-id').value;
-                const title = document.getElementById('edit-courrier-title').value;
-                const template = document.getElementById('edit-courrier-template').value;
-                
-                currentLetterTemplates[courrierId] = { title, template };
-                
-                const fileContent = `// Modèles de courriers pour les démarches juridiques\n// Remplacez les éléments entre crochets par vos informations personnelles\n\nconst letterTemplates = ${JSON.stringify(currentLetterTemplates, null, 4)};\n\n// Export pour utilisation dans app.js\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = letterTemplates;\n}`;
-                
-                const result = await updateGitHubFile('courriers-templates.js', fileContent, courriersSHA, `Mise à jour: ${title}`);
-                courriersSHA = result.content.sha;
-                
-                showSuccess('Modèle enregistré sur GitHub ! Les changements seront visibles dans quelques secondes.');
-                cancelEditCourrier();
-                loadCourriersList();
-            } catch (error) {
-                showError('Erreur: ' + error.message);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = 'Enregistrer';
+        // Créer une variable personnalisée
+        function createCustomVariable() {
+            const variableName = prompt('Nom de la variable personnalisée (ex: nom_medecin) :');
+            if (variableName) {
+                insertVariable(variableName.toLowerCase().replace(/\s+/g, '_'));
             }
         }
 
-        function cancelEditCourrier() {
-            document.getElementById('courriers-list').style.display = 'grid';
-            document.getElementById('courrier-editor').style.display = 'none';
+        // Sauvegarder un courrier
+        function saveCourrier() {
+            const courrierId = document.getElementById('courrier-select').value;
+            if (!courrierId) return;
+
+            letterTemplates[courrierId].title = document.getElementById('courrier-title').value;
+            letterTemplates[courrierId].template = document.getElementById('courrier-template').value;
+
+            saveDataToFile('courriers-templates.js', 'letterTemplates', letterTemplates);
+
+            const successMsg = document.getElementById('courrier-success');
+            successMsg.textContent = 'Courrier enregistré avec succès !';
+            successMsg.classList.add('show');
+            setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+            populateCouriersList();
+            populateCourrierSelect();
         }
 
-        function showSuccess(message) {
-            const div = document.getElementById('success-message');
-            div.textContent = message;
-            div.classList.add('show');
-            setTimeout(() => div.classList.remove('show'), 5000);
+        // Sauvegarder dans un fichier
+        function saveDataToFile(filename, varName, data) {
+            const content = `const ${varName} = ${JSON.stringify(data, null, 2)};`;
+            const blob = new Blob([content], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            alert(`Fichier ${filename} téléchargé ! Remplacez-le dans votre repo GitHub.`);
         }
 
-        function showError(message) {
-            const div = document.getElementById('error-message-main');
-            div.textContent = message;
-            div.classList.add('show');
-            setTimeout(() => div.classList.remove('show'), 8000);
-        }
-
-        function showInfo(message) {
-            const div = document.getElementById('info-message');
-            div.textContent = message;
-            div.classList.add('show');
-        }
-
-        function hideInfo() {
-            document.getElementById('info-message').classList.remove('show');
-        }
-
-        function showLoginError(message) {
-            const div = document.getElementById('error-login');
-            div.textContent = message;
-            div.classList.add('show');
-        }
-
-        // Auto-login si token déjà sauvegardé
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedToken = localStorage.getItem('github_token');
-            if (savedToken) {
-                document.getElementById('github-token').value = savedToken;
-            }
-        });
+        // Initialisation
+        loadExternalData();
     </script>
 </body>
 </html>
