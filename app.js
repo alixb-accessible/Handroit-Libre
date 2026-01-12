@@ -434,3 +434,27 @@ function performSearch(query) {
         alert(`Aucun résultat pour "${query}".`);
     }
 }
+// Mentions légales
+function showMentions() {
+    const homeSection = document.getElementById('home-section');
+    const contentSection = document.getElementById('content-section');
+    const generatorSection = document.getElementById('generator-section');
+    const mentionsSection = document.getElementById('mentions-section');
+    
+    if (homeSection) homeSection.style.display = 'none';
+    if (contentSection) contentSection.classList.remove('active');
+    if (generatorSection) generatorSection.classList.remove('active');
+    if (mentionsSection) mentionsSection.style.display = 'block';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeMentions() {
+    const homeSection = document.getElementById('home-section');
+    const mentionsSection = document.getElementById('mentions-section');
+    
+    if (mentionsSection) mentionsSection.style.display = 'none';
+    if (homeSection) homeSection.style.display = 'block';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
