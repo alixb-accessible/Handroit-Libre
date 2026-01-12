@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handroit Libre - Droit du handicap accessible et gratuit</title>
+    <title>Handipass - Droits, recours et ressources regroupées par thématiques</title>
     <meta name="description" content="Plateforme gratuite regroupant tous les textes de loi sur le handicap, recherche par thèmes et aide à la rédaction de courriers">
     
     <!-- Fonts -->
@@ -21,194 +21,179 @@
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
-    <header>
-        <div class="container">
-            <h1>Handroit Libre</h1>
-            <p class="tagline">Le droit du handicap, accessible et gratuit pour tous</p>
-        </div>
-    </header>
+    <!-- Auth Wall -->
+    <div id="auth-wall" class="auth-wall">
+        <div class="auth-container">
+            <h1>Handipass</h1>
+            <p class="auth-tagline">Droits, recours et ressources regroupées par thématiques</p>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('signup')" id="tab-signup">S'inscrire</button>
+                <button class="auth-tab" onclick="switchAuthTab('login')" id="tab-login">Se connecter</button>
+            </div>
 
-    <main id="main-content" class="container">
-        <section id="home-section">
-            <div class="hero">
-                <div class="container">
-                    <h2>Tous vos droits au même endroit</h2>
-                    <p>Parce que le droit du handicap est éparpillé dans des dizaines de codes et textes, nous centralisons tout ici. Gratuitement. Pour vous.</p>
-                    
-                    <div class="search-box">
-                        <label for="search-input">Recherchez par mot-clé</label>
-                        <input 
-                            type="search" 
-                            id="search-input" 
-                            class="search-input" 
-                            placeholder="Exemple : AAH, MDPH, recours, accessibilité, invalidité..."
-                            aria-describedby="search-help"
-                        >
-                        <p id="search-help">Tapez un mot-clé et appuyez sur Entrée pour rechercher</p>
+            <!-- Signup Form -->
+            <div id="signup-form" class="auth-form active">
+                <p class="auth-description">Accédez gratuitement à toutes les informations juridiques sur le handicap</p>
+                
+                <div id="signup-error" class="auth-error"></div>
+                
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="signup-email">Adresse email personnelle</label>
+                        <input type="email" id="signup-email" required placeholder="votre@email.fr">
+                        <small>Les adresses email professionnelles d'établissements ne sont pas acceptées</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-captcha">Question anti-robot : Combien font 5 + 3 ?</label>
+                        <input type="text" id="signup-captcha" required placeholder="Votre réponse">
+                    </div>
+
+                    <button type="submit" class="auth-btn">S'inscrire gratuitement</button>
+                </form>
+
+                <p class="auth-note">En vous inscrivant, vous acceptez que votre email soit utilisé uniquement pour l'accès à la plateforme. Aucune donnée n'est partagée.</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <p class="auth-description">Reconnectez-vous pour accéder à vos ressources</p>
+                
+                <div id="login-error" class="auth-error"></div>
+                
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="login-email">Adresse email</label>
+                        <input type="email" id="login-email" required placeholder="votre@email.fr">
+                    </div>
+
+                    <button type="submit" class="auth-btn">Se connecter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Site (hidden until authenticated) -->
+    <div id="main-site" style="display: none;">
+        <header>
+            <div class="container">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1>Handipass</h1>
+                        <p class="tagline">Droits, recours et ressources regroupées par thématiques</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span id="user-email" style="color: #6b7280; font-size: 0.9rem;"></span>
+                        <button onclick="logout()" style="background: #dc2626; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-family: 'Lexend', sans-serif;">Déconnexion</button>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <section class="quick-actions">
-                <h2>Actions rapides</h2>
-                <div class="actions-grid">
-                    <button class="action-btn secondary" onclick="showGenerator()">Générer un courrier</button>
-                    <button class="action-btn" onclick="showTheme('mdph')">Droits MDPH</button>
-                    <button class="action-btn" onclick="showTheme('aah')">AAH et ressources</button>
-                    <button class="action-btn warning" onclick="showTheme('arnaques')">Alertes et arnaques</button>
+        <main id="main-content" class="container">
+            <section id="home-section">
+                <div class="hero">
+                    <div class="container">
+                        <h2>Tous vos droits au même endroit</h2>
+                        <p>Parce que le droit du handicap est éparpillé dans des dizaines de codes et textes, nous centralisons tout ici. Gratuitement. Pour vous.</p>
+                        
+                        <div class="search-box">
+                            <label for="search-input">Recherchez par mot-clé</label>
+                            <input 
+                                type="search" 
+                                id="search-input" 
+                                class="search-input" 
+                                placeholder="Exemple : AAH, MDPH, recours, accessibilité, invalidité..."
+                                aria-describedby="search-help"
+                            >
+                            <p id="search-help">Tapez un mot-clé et appuyez sur Entrée pour rechercher</p>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="quick-actions">
+                    <h2>Actions rapides</h2>
+                    <div class="actions-grid">
+                        <button class="action-btn secondary" onclick="showGenerator()">Générer un courrier</button>
+                        <button class="action-btn" onclick="showTheme('mdph')">Droits MDPH</button>
+                        <button class="action-btn" onclick="showTheme('aah')">AAH et ressources</button>
+                        <button class="action-btn warning" onclick="showTheme('arnaques')">Alertes et arnaques</button>
+                    </div>
+                </section>
+
+                <h2 class="section-title">Droits fondamentaux et prestations</h2>
+                <div class="themes-grid" id="themes-grid-1"></div>
+
+                <h2 class="section-title">Emploi, scolarité et parentalité</h2>
+                <div class="themes-grid" id="themes-grid-2"></div>
+
+                <h2 class="section-title">Accessibilité et communication</h2>
+                <div class="themes-grid" id="themes-grid-3"></div>
+
+                <h2 class="section-title">Alertes et protections</h2>
+                <div class="themes-grid" id="themes-grid-4"></div>
+
+                <div class="external-resources">
+                    <h2>Ressources et recours</h2>
+                    <ul>
+                        <li><a href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener noreferrer">Défenseur des droits - Saisine en ligne</a></li>
+                        <li><a href="https://alixb-accessible.github.io/HandiPassLegifrance/" target="_blank" rel="noopener noreferrer">Rechercher dans les textes de loi Légifrance</a></li>
+                        <li><a href="https://www.legifrance.gouv.fr" target="_blank" rel="noopener noreferrer">Légifrance - Consulter les textes de loi</a></li>
+                        <li><a href="https://www.service-public.fr/particuliers/vosdroits/N12230" target="_blank" rel="noopener noreferrer">Service-Public.fr - Handicap</a></li>
+                    </ul>
                 </div>
             </section>
 
-            <h2 class="section-title">Droits fondamentaux et prestations</h2>
-            <div class="themes-grid">
-                <button class="theme-card" onclick="showTheme('mdph')">
-                    <h3>MDPH et droits fondamentaux</h3>
-                    <p>Dossier MDPH, reconnaissance du handicap, recours, délais et procédures</p>
-                </button>
+            <section id="content-section" class="content-section">
+                <button class="back-btn" onclick="backToHome()">Retour à l'accueil</button>
+                <div id="content-area"></div>
+            </section>
 
-                <button class="theme-card" onclick="showTheme('aah')">
-                    <h3>AAH et ressources</h3>
-                    <p>Allocation aux Adultes Handicapés, conditions, montants, compléments et cumuls</p>
-                </button>
+            <section id="generator-section" class="content-section">
+                <button class="back-btn" onclick="backToHome()">Retour à l'accueil</button>
+                <h2>Générateur de courriers</h2>
+                
+                <div id="courrier-selection">
+                    <p class="generator-intro">Sélectionnez le type de courrier que vous souhaitez générer</p>
+                    <div class="actions-grid" id="courriers-grid"></div>
+                </div>
 
-                <button class="theme-card" onclick="showTheme('pch')">
-                    <h3>PCH et aides humaines</h3>
-                    <p>Prestation de Compensation du Handicap, aides techniques, aménagement</p>
-                </button>
+                <div id="courrier-form" style="display: none;">
+                    <h3 id="form-title">Personnalisez votre courrier</h3>
+                    <p style="margin-bottom: 1.5rem; color: #6b7280;">Remplissez les champs ci-dessous pour générer votre courrier personnalisé</p>
+                    
+                    <form id="courrier-form-fields" onsubmit="generatePersonalizedLetter(event)">
+                        <div id="dynamic-fields"></div>
+                        
+                        <button type="submit" class="action-btn secondary" style="margin-top: 1rem;">Générer le courrier</button>
+                        <button type="button" class="action-btn" style="background: #6b7280; margin-left: 0.5rem;" onclick="backToCourrierSelection()">Retour</button>
+                    </form>
+                </div>
 
-                <button class="theme-card" onclick="showTheme('invalidite')">
-                    <h3>Pension d'invalidité</h3>
-                    <p>Catégories 1, 2, 3, cumuls avec AAH, passage en retraite anticipée</p>
-                </button>
+                <div id="letter-output" style="display: none;">
+                    <h3>Votre courrier personnalisé</h3>
+                    <div id="letter-text"></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                        <button class="action-btn secondary copy-btn" onclick="copyLetter()">Copier le courrier</button>
+                        <button class="action-btn" onclick="backToCourrierForm()">Modifier les informations</button>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-                <button class="theme-card" onclick="showTheme('retraite')">
-                    <h3>Retraite anticipée handicap</h3>
-                    <p>Critères RQTH, taux d'incapacité, durée de cotisation, démarches</p>
-                </button>
+        <footer>
+            <div class="container">
+                <p><strong>Handipass</strong> - Plateforme gratuite et accessible</p>
+                <p>Les informations fournies sont à titre informatif et ne constituent pas un conseil juridique personnalisé.</p>
+                <p>En cas de doute, consultez un avocat spécialisé ou une association de défense des droits.</p>
+                <p class="ti-racoon">Propulsé par Ti Racoon</p>
             </div>
-
-            <h2 class="section-title">Emploi, scolarité et parentalité</h2>
-            <div class="themes-grid">
-                <button class="theme-card" onclick="showTheme('emploi')">
-                    <h3>Emploi et RQTH</h3>
-                    <p>Reconnaissance Travailleur Handicapé, aménagements, obligation d'emploi</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('scolarite')">
-                    <h3>Scolarisation</h3>
-                    <p>Projet personnalisé, AESH, aménagements d'examens, orientation</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('parentalite')">
-                    <h3>Parentalité et handicap</h3>
-                    <p>PCH parentalité, aide à la parentalité, lutte contre discriminations</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('ase')">
-                    <h3>ASE et placements abusifs</h3>
-                    <p>Droits des parents handicapés, présomptions illégales, recours</p>
-                </button>
-            </div>
-
-            <h2 class="section-title">Accessibilité et communication</h2>
-            <div class="themes-grid">
-                <button class="theme-card" onclick="showTheme('accessibilite')">
-                    <h3>Accessibilité et logement</h3>
-                    <p>Normes, aménagements, voirie, transports, ERP et logement</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('braille')">
-                    <h3>Braille et supports accessibles</h3>
-                    <p>Droit à l'information en braille, transcription, supports tactiles</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('lsf')">
-                    <h3>LSF et interprétariat</h3>
-                    <p>Droit à l'interprète, situations obligatoires, financement</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('chiens')">
-                    <h3>Chiens d'assistance</h3>
-                    <p>Droits d'accès aux lieux publics, refus illégaux, justificatifs</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('numerique')">
-                    <h3>Accessibilité numérique</h3>
-                    <p>RGAA, obligations des sites publics et privés, recours</p>
-                </button>
-            </div>
-
-            <h2 class="section-title">Alertes et protections</h2>
-            <div class="themes-grid">
-                <button class="theme-card alert" onclick="showTheme('arnaques')">
-                    <h3>Arnaques et fausses médecines</h3>
-                    <p>Javel/MMS, ABA coercitive, TEACCH détourné, packing, pratiques dangereuses</p>
-                </button>
-
-                <button class="theme-card alert" onclick="showTheme('maltraitance')">
-                    <h3>Maltraitance institutionnelle</h3>
-                    <p>En ESMS, foyers, hôpitaux psychiatriques, signalement et recours</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('asso-gestionnaires')">
-                    <h3>Associations gestionnaires</h3>
-                    <p>Ce qu'elles sont vraiment, conflits d'intérêts, cartographie</p>
-                </button>
-
-                <button class="theme-card" onclick="showTheme('discrimination')">
-                    <h3>Discrimination</h3>
-                    <p>Preuves, procédures, sanctions, saisine du Défenseur des droits</p>
-                </button>
-            </div>
-
-            <div class="external-resources">
-                <h2>Ressources et recours</h2>
-                <ul>
-                    <li><a href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener noreferrer">Défenseur des droits - Saisine en ligne</a></li>
-                    <li><a href="#" onclick="showTheme('cartographie-asso'); return false;">Cartographie des associations gestionnaires</a></li>
-                    <li><a href="https://www.legifrance.gouv.fr" target="_blank" rel="noopener noreferrer">Légifrance - Consulter les textes de loi</a></li>
-                    <li><a href="https://www.service-public.fr/particuliers/vosdroits/N12230" target="_blank" rel="noopener noreferrer">Service-Public.fr - Handicap</a></li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="content-section" class="content-section">
-            <button class="back-btn" onclick="backToHome()">Retour à l'accueil</button>
-            <div id="content-area"></div>
-        </section>
-
-        <section id="generator-section" class="content-section">
-            <button class="back-btn" onclick="backToHome()">Retour à l'accueil</button>
-            <h2>Générateur de courriers</h2>
-            <p class="generator-intro">Sélectionnez le type de courrier que vous souhaitez générer</p>
-            
-            <div class="actions-grid">
-                <button class="action-btn" onclick="generateLetter('recours-mdph')">Recours MDPH</button>
-                <button class="action-btn" onclick="generateLetter('demande-aah')">Demande AAH</button>
-                <button class="action-btn" onclick="generateLetter('demande-pch')">Demande PCH</button>
-                <button class="action-btn" onclick="generateLetter('contestation-refus')">Contestation refus</button>
-                <button class="action-btn warning" onclick="generateLetter('signalement-maltraitance')">Signalement maltraitance</button>
-                <button class="action-btn" onclick="generateLetter('placement-ase')">Recours placement ASE</button>
-            </div>
-
-            <div id="letter-output">
-                <h3>Votre courrier personnalisé</h3>
-                <div id="letter-text"></div>
-                <button class="action-btn secondary copy-btn" onclick="copyLetter()">Copier le courrier</button>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p><strong>Handroit Libre</strong> - Plateforme gratuite et accessible</p>
-            <p>Les informations fournies sont à titre informatif et ne constituent pas un conseil juridique personnalisé.</p>
-            <p>En cas de doute, consultez un avocat spécialisé ou une association de défense des droits.</p>
-            <p class="ti-racoon">Propulsé par Ti Racoon</p>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <!-- Scripts -->
+    <script src="auth.js"></script>
     <script src="themes-data.js"></script>
     <script src="courriers-templates.js"></script>
     <script src="app.js"></script>
