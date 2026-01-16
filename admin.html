@@ -470,6 +470,8 @@
 
         // Remplir la liste des thématiques
         function populateThemesList() {
+            if (!window.themeData) return;
+            
             const list = document.getElementById('themes-list');
             list.innerHTML = '';
 
@@ -496,6 +498,8 @@
 
         // Remplir la liste des courriers
         function populateCouriersList() {
+            if (!window.letterTemplates) return;
+            
             const list = document.getElementById('courriers-list');
             list.innerHTML = '';
 
@@ -536,6 +540,8 @@
 
         // Remplir le select des thématiques
         function populateThemeSelect() {
+            if (!window.themeData) return;
+            
             const select = document.getElementById('theme-select');
             select.innerHTML = '<option value="">-- Choisir --</option>';
 
@@ -549,6 +555,8 @@
 
         // Charger une thématique pour édition
         function loadThemeForEdit() {
+            if (!window.themeData) return;
+            
             const themeId = document.getElementById('theme-select').value;
             if (!themeId) {
                 document.getElementById('theme-editor').style.display = 'none';
@@ -564,6 +572,8 @@
 
         // Sauvegarder une thématique
         function saveTheme() {
+            if (!window.themeData) return;
+            
             const themeId = document.getElementById('theme-select').value;
             if (!themeId) return;
 
@@ -584,6 +594,8 @@
 
         // Remplir le select des courriers
         function populateCourrierSelect() {
+            if (!window.letterTemplates) return;
+            
             const select = document.getElementById('courrier-select');
             select.innerHTML = '<option value="">-- Choisir --</option>';
 
@@ -597,6 +609,8 @@
 
         // Charger un courrier pour édition
         function loadCourrierForEdit() {
+            if (!window.letterTemplates) return;
+            
             const courrierId = document.getElementById('courrier-select').value;
             if (!courrierId) {
                 document.getElementById('courrier-editor').style.display = 'none';
@@ -631,6 +645,8 @@
 
         // Sauvegarder un courrier
         function saveCourrier() {
+            if (!window.letterTemplates) return;
+            
             const courrierId = document.getElementById('courrier-select').value;
             if (!courrierId) return;
 
@@ -697,13 +713,21 @@
             }
         }
 
-        // Initialisation au chargement de la page
-        window.addEventListener('DOMContentLoaded', () => {
-            populateThemesList();
-            populateThemeSelect();
-            populateCouriersList();
-            populateCourrierSelect();
-        });
+        // Initialisation - attendre que les données soient chargées
+        function initAdmin() {
+            if (window.themeData && window.letterTemplates) {
+                populateThemesList();
+                populateThemeSelect();
+                populateCouriersList();
+                populateCourrierSelect();
+            } else {
+                // Réessayer après 100ms
+                setTimeout(initAdmin, 100);
+            }
+        }
+
+        // Lancer l'initialisation
+        window.addEventListener('DOMContentLoaded', initAdmin);
     </script>
 </body>
 </html>
