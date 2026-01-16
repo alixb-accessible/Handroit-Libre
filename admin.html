@@ -454,10 +454,6 @@
     </div>
 
     <script>
-        // Charger les données
-        let themeData = {};
-        let letterTemplates = {};
-
         // Onglets
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -477,8 +473,8 @@
             const list = document.getElementById('themes-list');
             list.innerHTML = '';
 
-            Object.keys(themeData).forEach(themeId => {
-                const theme = themeData[themeId];
+            Object.keys(window.themeData).forEach(themeId => {
+                const theme = window.themeData[themeId];
                 const isRestricted = theme.restricted === true;
 
                 const li = document.createElement('li');
@@ -503,8 +499,8 @@
             const list = document.getElementById('courriers-list');
             list.innerHTML = '';
 
-            Object.keys(letterTemplates).forEach(courrierId => {
-                const courrier = letterTemplates[courrierId];
+            Object.keys(window.letterTemplates).forEach(courrierId => {
+                const courrier = window.letterTemplates[courrierId];
                 const isRestricted = courrier.restricted === true;
 
                 const li = document.createElement('li');
@@ -526,15 +522,15 @@
 
         // Toggle accès thématique
         function toggleThemeAccess(themeId, isFree) {
-            themeData[themeId].restricted = !isFree;
-            saveDataToFile('themes-data.js', 'themeData', themeData);
+            window.themeData[themeId].restricted = !isFree;
+            saveDataToFile('themes-data.js', 'themeData', window.themeData);
             populateThemesList();
         }
 
         // Toggle accès courrier
         function toggleCourrierAccess(courrierId, isFree) {
-            letterTemplates[courrierId].restricted = !isFree;
-            saveDataToFile('courriers-templates.js', 'letterTemplates', letterTemplates);
+            window.letterTemplates[courrierId].restricted = !isFree;
+            saveDataToFile('courriers-templates.js', 'letterTemplates', window.letterTemplates);
             populateCouriersList();
         }
 
@@ -543,10 +539,10 @@
             const select = document.getElementById('theme-select');
             select.innerHTML = '<option value="">-- Choisir --</option>';
 
-            Object.keys(themeData).forEach(themeId => {
+            Object.keys(window.themeData).forEach(themeId => {
                 const option = document.createElement('option');
                 option.value = themeId;
-                option.textContent = themeData[themeId].title;
+                option.textContent = window.themeData[themeId].title;
                 select.appendChild(option);
             });
         }
@@ -559,7 +555,7 @@
                 return;
             }
 
-            const theme = themeData[themeId];
+            const theme = window.themeData[themeId];
             document.getElementById('theme-title').value = theme.title;
             document.getElementById('theme-description').value = theme.description || '';
             document.getElementById('theme-content').value = theme.content || '';
@@ -571,11 +567,11 @@
             const themeId = document.getElementById('theme-select').value;
             if (!themeId) return;
 
-            themeData[themeId].title = document.getElementById('theme-title').value;
-            themeData[themeId].description = document.getElementById('theme-description').value;
-            themeData[themeId].content = document.getElementById('theme-content').value;
+            window.themeData[themeId].title = document.getElementById('theme-title').value;
+            window.themeData[themeId].description = document.getElementById('theme-description').value;
+            window.themeData[themeId].content = document.getElementById('theme-content').value;
 
-            saveDataToFile('themes-data.js', 'themeData', themeData);
+            saveDataToFile('themes-data.js', 'themeData', window.themeData);
 
             const successMsg = document.getElementById('theme-success');
             successMsg.textContent = 'Thématique enregistrée avec succès !';
@@ -591,10 +587,10 @@
             const select = document.getElementById('courrier-select');
             select.innerHTML = '<option value="">-- Choisir --</option>';
 
-            Object.keys(letterTemplates).forEach(courrierId => {
+            Object.keys(window.letterTemplates).forEach(courrierId => {
                 const option = document.createElement('option');
                 option.value = courrierId;
-                option.textContent = letterTemplates[courrierId].title;
+                option.textContent = window.letterTemplates[courrierId].title;
                 select.appendChild(option);
             });
         }
@@ -607,7 +603,7 @@
                 return;
             }
 
-            const courrier = letterTemplates[courrierId];
+            const courrier = window.letterTemplates[courrierId];
             document.getElementById('courrier-title').value = courrier.title;
             document.getElementById('courrier-template').value = courrier.template;
             document.getElementById('courrier-editor').style.display = 'block';
@@ -638,10 +634,10 @@
             const courrierId = document.getElementById('courrier-select').value;
             if (!courrierId) return;
 
-            letterTemplates[courrierId].title = document.getElementById('courrier-title').value;
-            letterTemplates[courrierId].template = document.getElementById('courrier-template').value;
+            window.letterTemplates[courrierId].title = document.getElementById('courrier-title').value;
+            window.letterTemplates[courrierId].template = document.getElementById('courrier-template').value;
 
-            saveDataToFile('courriers-templates.js', 'letterTemplates', letterTemplates);
+            saveDataToFile('courriers-templates.js', 'letterTemplates', window.letterTemplates);
 
             const successMsg = document.getElementById('courrier-success');
             successMsg.textContent = 'Courrier enregistré avec succès !';
@@ -703,9 +699,6 @@
 
         // Initialisation au chargement de la page
         window.addEventListener('DOMContentLoaded', () => {
-            themeData = window.themeData || {};
-            letterTemplates = window.letterTemplates || {};
-            
             populateThemesList();
             populateThemeSelect();
             populateCouriersList();
