@@ -10,6 +10,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Charger les données -->
+    <script src="themes-data.js"></script>
+    <script src="courriers-templates.js"></script>
+    
     <!-- Accessibility Toolbar -->
     <link rel="stylesheet" href="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.css">
     <script src="https://alixb-accessible.github.io/faites-mieux-toolbar/faites-mieux.js" defer></script>
@@ -454,40 +458,6 @@
         let themeData = {};
         let letterTemplates = {};
 
-        // Charger depuis les fichiers JS
-        function loadExternalData() {
-            // Vérifier si les données sont déjà chargées
-            if (window.themeData) {
-                themeData = window.themeData;
-                populateThemesList();
-                populateThemeSelect();
-            } else {
-                const script1 = document.createElement('script');
-                script1.src = 'themes-data.js';
-                script1.onload = () => {
-                    themeData = window.themeData || {};
-                    populateThemesList();
-                    populateThemeSelect();
-                };
-                document.body.appendChild(script1);
-            }
-
-            if (window.letterTemplates) {
-                letterTemplates = window.letterTemplates;
-                populateCouriersList();
-                populateCourrierSelect();
-            } else {
-                const script2 = document.createElement('script');
-                script2.src = 'courriers-templates.js';
-                script2.onload = () => {
-                    letterTemplates = window.letterTemplates || {};
-                    populateCouriersList();
-                    populateCourrierSelect();
-                };
-                document.body.appendChild(script2);
-            }
-        }
-
         // Onglets
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -731,8 +701,16 @@
             }
         }
 
-        // Initialisation
-        loadExternalData();
+        // Initialisation au chargement de la page
+        window.addEventListener('DOMContentLoaded', () => {
+            themeData = window.themeData || {};
+            letterTemplates = window.letterTemplates || {};
+            
+            populateThemesList();
+            populateThemeSelect();
+            populateCouriersList();
+            populateCourrierSelect();
+        });
     </script>
 </body>
 </html>
