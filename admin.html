@@ -456,23 +456,36 @@
 
         // Charger depuis les fichiers JS
         function loadExternalData() {
-            const script1 = document.createElement('script');
-            script1.src = 'themes-data.js';
-            script1.onload = () => {
-                themeData = window.themeData || {};
+            // Vérifier si les données sont déjà chargées
+            if (window.themeData) {
+                themeData = window.themeData;
                 populateThemesList();
                 populateThemeSelect();
-            };
-            document.body.appendChild(script1);
+            } else {
+                const script1 = document.createElement('script');
+                script1.src = 'themes-data.js';
+                script1.onload = () => {
+                    themeData = window.themeData || {};
+                    populateThemesList();
+                    populateThemeSelect();
+                };
+                document.body.appendChild(script1);
+            }
 
-            const script2 = document.createElement('script');
-            script2.src = 'courriers-templates.js';
-            script2.onload = () => {
-                letterTemplates = window.letterTemplates || {};
+            if (window.letterTemplates) {
+                letterTemplates = window.letterTemplates;
                 populateCouriersList();
                 populateCourrierSelect();
-            };
-            document.body.appendChild(script2);
+            } else {
+                const script2 = document.createElement('script');
+                script2.src = 'courriers-templates.js';
+                script2.onload = () => {
+                    letterTemplates = window.letterTemplates || {};
+                    populateCouriersList();
+                    populateCourrierSelect();
+                };
+                document.body.appendChild(script2);
+            }
         }
 
         // Onglets
