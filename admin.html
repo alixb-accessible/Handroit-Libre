@@ -439,14 +439,13 @@
 
         async function loadData() {
             try {
-                // Charger themes-data.txt
-                const themesResponse = await fetch('/public/themes-data.txt');
+                // Charger depuis jsDelivr CDN (GitHub)
+                const themesResponse = await fetch('https://cdn.jsdelivr.net/gh/alixb-accessible/Handipass@main/public/themes-data.txt');
                 const themesText = await themesResponse.text();
                 eval(themesText);
                 themeData = window.themeData;
 
-                // Charger courriers-templates.txt
-                const courriersResponse = await fetch('/public/courriers-templates.txt');
+                const courriersResponse = await fetch('https://cdn.jsdelivr.net/gh/alixb-accessible/Handipass@main/public/courriers-templates.txt');
                 const courriersText = await courriersResponse.text();
                 eval(courriersText);
                 letterTemplates = window.letterTemplates;
