@@ -612,7 +612,7 @@
                 return;
             }
             try {
-                const res = await fetch('/.netlify/functions/update-data', {
+                const res = await fetch('/api/update-data', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({filename, content, password})
