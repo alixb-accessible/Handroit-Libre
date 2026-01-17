@@ -17,14 +17,10 @@
     <!-- Protection par mot de passe -->
     <script>
         (function() {
-            // Vérifier si déjà authentifié
             const isAuth = sessionStorage.getItem('handipass_admin_auth');
             
             if (!isAuth) {
-                // Demander le mot de passe
                 const password = prompt('Mot de passe administrateur requis :');
-                
-                // Mot de passe (tu peux le changer)
                 const correctPassword = 'HandipassAdmin2026';
                 
                 if (password !== correctPassword) {
@@ -33,7 +29,6 @@
                     return;
                 }
                 
-                // Stocker l'authentification et le mot de passe pour la session
                 sessionStorage.setItem('handipass_admin_auth', 'true');
                 sessionStorage.setItem('admin_password', password);
             }
@@ -181,22 +176,6 @@
             background: #2563eb;
         }
 
-        .btn-secondary {
-            background: #6b7280;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
-
-        .btn-danger {
-            background: #dc2626;
-        }
-
-        .btn-danger:hover {
-            background: #b91c1c;
-        }
-
         .btn-success {
             background: #22c55e;
         }
@@ -241,11 +220,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 0.5rem;
         }
 
         .toggle-switch {
@@ -460,46 +434,40 @@
     </div>
 
     <script>
-        // Variables globales
         let themeData = {};
         let letterTemplates = {};
 
-        // Charger les données via fetch
         async function loadData() {
             try {
-                // Charger themes-data.js
-                const themesResponse = await fetch('/public/themes-data.js');
+                // Charger themes-data.txt
+                const themesResponse = await fetch('/public/themes-data.txt');
                 const themesText = await themesResponse.text();
                 eval(themesText);
                 themeData = window.themeData;
 
-                // Charger courriers-templates.js
-                const courriersResponse = await fetch('/public/courriers-templates.js');
+                // Charger courriers-templates.txt
+                const courriersResponse = await fetch('/public/courriers-templates.txt');
                 const courriersText = await courriersResponse.text();
                 eval(courriersText);
                 letterTemplates = window.letterTemplates;
 
-                // Masquer le loading et afficher le contenu
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
 
-                // Initialiser l'interface
                 populateThemesList();
                 populateThemeSelect();
                 populateCouriersList();
                 populateCourrierSelect();
 
             } catch (error) {
-                console.error('Erreur de chargement:', error);
-                document.getElementById('loading').innerHTML = '❌ Erreur de chargement des données. Veuillez recharger la page.';
+                console.error('Erreur:', error);
+                document.getElementById('loading').innerHTML = '❌ Erreur de chargement. Veuillez recharger la page.';
             }
         }
 
-        // Onglets
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
             if (tab === 'themes') {
                 document.querySelector('[onclick="switchTab(\'themes\')"]').classList.add('active');
                 document.getElementById('tab-themes').classList.add('active');
@@ -509,93 +477,59 @@
             }
         }
 
-        // Remplir la liste des thématiques
         function populateThemesList() {
             const list = document.getElementById('themes-list');
             list.innerHTML = '';
-
             Object.keys(themeData).forEach(themeId => {
                 const theme = themeData[themeId];
                 const isRestricted = theme.restricted === true;
-
                 const li = document.createElement('li');
-                li.innerHTML = `
-                    <div>
-                        <strong>${theme.title}</strong>
-                        <span class="status-badge ${isRestricted ? 'status-restricted' : 'status-free'}">
-                            ${isRestricted ? 'Réservé' : 'Libre'}
-                        </span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" ${isRestricted ? '' : 'checked'} onchange="toggleThemeAccess('${themeId}', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                `;
+                li.innerHTML = `<div><strong>${theme.title}</strong><span class="status-badge ${isRestricted ? 'status-restricted' : 'status-free'}">${isRestricted ? 'Réservé' : 'Libre'}</span></div><label class="toggle-switch"><input type="checkbox" ${isRestricted ? '' : 'checked'} onchange="toggleThemeAccess('${themeId}', this.checked)"><span class="slider"></span></label>`;
                 list.appendChild(li);
             });
         }
 
-        // Remplir la liste des courriers
         function populateCouriersList() {
             const list = document.getElementById('courriers-list');
             list.innerHTML = '';
-
             Object.keys(letterTemplates).forEach(courrierId => {
                 const courrier = letterTemplates[courrierId];
                 const isRestricted = courrier.restricted === true;
-
                 const li = document.createElement('li');
-                li.innerHTML = `
-                    <div>
-                        <strong>${courrier.title}</strong>
-                        <span class="status-badge ${isRestricted ? 'status-restricted' : 'status-free'}">
-                            ${isRestricted ? 'Réservé' : 'Libre'}
-                        </span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" ${isRestricted ? '' : 'checked'} onchange="toggleCourrierAccess('${courrierId}', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                `;
+                li.innerHTML = `<div><strong>${courrier.title}</strong><span class="status-badge ${isRestricted ? 'status-restricted' : 'status-free'}">${isRestricted ? 'Réservé' : 'Libre'}</span></div><label class="toggle-switch"><input type="checkbox" ${isRestricted ? '' : 'checked'} onchange="toggleCourrierAccess('${courrierId}', this.checked)"><span class="slider"></span></label>`;
                 list.appendChild(li);
             });
         }
 
-        // Toggle accès thématique
         function toggleThemeAccess(themeId, isFree) {
             themeData[themeId].restricted = !isFree;
-            saveDataToFile('public/themes-data.js', 'themeData', themeData);
+            saveDataToFile('public/themes-data.txt', 'themeData', themeData);
             populateThemesList();
         }
 
-        // Toggle accès courrier
         function toggleCourrierAccess(courrierId, isFree) {
             letterTemplates[courrierId].restricted = !isFree;
-            saveDataToFile('public/courriers-templates.js', 'letterTemplates', letterTemplates);
+            saveDataToFile('public/courriers-templates.txt', 'letterTemplates', letterTemplates);
             populateCouriersList();
         }
 
-        // Remplir le select des thématiques
         function populateThemeSelect() {
             const select = document.getElementById('theme-select');
             select.innerHTML = '<option value="">-- Choisir --</option>';
-
             Object.keys(themeData).forEach(themeId => {
-                const option = document.createElement('option');
-                option.value = themeId;
-                option.textContent = themeData[themeId].title;
-                select.appendChild(option);
+                const opt = document.createElement('option');
+                opt.value = themeId;
+                opt.textContent = themeData[themeId].title;
+                select.appendChild(opt);
             });
         }
 
-        // Charger une thématique pour édition
         function loadThemeForEdit() {
             const themeId = document.getElementById('theme-select').value;
             if (!themeId) {
                 document.getElementById('theme-editor').style.display = 'none';
                 return;
             }
-
             const theme = themeData[themeId];
             document.getElementById('theme-title').value = theme.title;
             document.getElementById('theme-description').value = theme.description || '';
@@ -603,139 +537,103 @@
             document.getElementById('theme-editor').style.display = 'block';
         }
 
-        // Sauvegarder une thématique
         function saveTheme() {
             const themeId = document.getElementById('theme-select').value;
             if (!themeId) return;
-
             themeData[themeId].title = document.getElementById('theme-title').value;
             themeData[themeId].description = document.getElementById('theme-description').value;
             themeData[themeId].content = document.getElementById('theme-content').value;
-
-            saveDataToFile('public/themes-data.js', 'themeData', themeData);
-
-            const successMsg = document.getElementById('theme-success');
-            successMsg.textContent = 'Thématique enregistrée avec succès !';
-            successMsg.classList.add('show');
-            setTimeout(() => successMsg.classList.remove('show'), 3000);
-
+            saveDataToFile('public/themes-data.txt', 'themeData', themeData);
+            const msg = document.getElementById('theme-success');
+            msg.textContent = 'Thématique enregistrée avec succès !';
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
             populateThemesList();
             populateThemeSelect();
         }
 
-        // Remplir le select des courriers
         function populateCourrierSelect() {
             const select = document.getElementById('courrier-select');
             select.innerHTML = '<option value="">-- Choisir --</option>';
-
             Object.keys(letterTemplates).forEach(courrierId => {
-                const option = document.createElement('option');
-                option.value = courrierId;
-                option.textContent = letterTemplates[courrierId].title;
-                select.appendChild(option);
+                const opt = document.createElement('option');
+                opt.value = courrierId;
+                opt.textContent = letterTemplates[courrierId].title;
+                select.appendChild(opt);
             });
         }
 
-        // Charger un courrier pour édition
         function loadCourrierForEdit() {
             const courrierId = document.getElementById('courrier-select').value;
             if (!courrierId) {
                 document.getElementById('courrier-editor').style.display = 'none';
                 return;
             }
-
-            const courrier = letterTemplates[courrierId];
-            document.getElementById('courrier-title').value = courrier.title;
-            document.getElementById('courrier-template').value = courrier.template;
+            const cour = letterTemplates[courrierId];
+            document.getElementById('courrier-title').value = cour.title;
+            document.getElementById('courrier-template').value = cour.template;
             document.getElementById('courrier-editor').style.display = 'block';
         }
 
-        // Insérer une variable
-        function insertVariable(variableName) {
-            const textarea = document.getElementById('courrier-template');
-            const cursorPos = textarea.selectionStart;
-            const textBefore = textarea.value.substring(0, cursorPos);
-            const textAfter = textarea.value.substring(cursorPos);
-
-            textarea.value = textBefore + `{{${variableName}}}` + textAfter;
-            textarea.focus();
-            textarea.setSelectionRange(cursorPos + variableName.length + 4, cursorPos + variableName.length + 4);
+        function insertVariable(varName) {
+            const txt = document.getElementById('courrier-template');
+            const pos = txt.selectionStart;
+            const before = txt.value.substring(0, pos);
+            const after = txt.value.substring(pos);
+            txt.value = before + `{{${varName}}}` + after;
+            txt.focus();
+            txt.setSelectionRange(pos + varName.length + 4, pos + varName.length + 4);
         }
 
-        // Créer une variable personnalisée
         function createCustomVariable() {
-            const variableName = prompt('Nom de la variable personnalisée (ex: nom_medecin) :');
-            if (variableName) {
-                insertVariable(variableName.toLowerCase().replace(/\s+/g, '_'));
-            }
+            const varName = prompt('Nom de la variable personnalisée (ex: nom_medecin) :');
+            if (varName) insertVariable(varName.toLowerCase().replace(/\s+/g, '_'));
         }
 
-        // Sauvegarder un courrier
         function saveCourrier() {
             const courrierId = document.getElementById('courrier-select').value;
             if (!courrierId) return;
-
             letterTemplates[courrierId].title = document.getElementById('courrier-title').value;
             letterTemplates[courrierId].template = document.getElementById('courrier-template').value;
-
-            saveDataToFile('public/courriers-templates.js', 'letterTemplates', letterTemplates);
-
-            const successMsg = document.getElementById('courrier-success');
-            successMsg.textContent = 'Courrier enregistré avec succès !';
-            successMsg.classList.add('show');
-            setTimeout(() => successMsg.classList.remove('show'), 3000);
-
+            saveDataToFile('public/courriers-templates.txt', 'letterTemplates', letterTemplates);
+            const msg = document.getElementById('courrier-success');
+            msg.textContent = 'Courrier enregistré avec succès !';
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
             populateCouriersList();
             populateCourrierSelect();
         }
 
-        // Sauvegarder dans un fichier via le backend
         async function saveDataToFile(filename, varName, data) {
             const content = `const ${varName} = ${JSON.stringify(data, null, 2)};`;
-            
-            if (!confirm(`Voulez-vous enregistrer les modifications dans ${filename} ?`)) {
-                return;
-            }
-            
+            if (!confirm(`Voulez-vous enregistrer les modifications dans ${filename} ?`)) return;
             const password = sessionStorage.getItem('admin_password');
             if (!password) {
                 alert('Session expirée. Rechargez la page.');
                 return;
             }
-            
             try {
-                const response = await fetch('https://handipass.vercel.app/api/update-data', {
+                const res = await fetch('https://handipass.vercel.app/api/update-data', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        filename: filename,
-                        content: content,
-                        password: password
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({filename, content, password})
                 });
-                
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Erreur lors de la sauvegarde');
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Erreur lors de la sauvegarde');
                 }
-                
-                const result = await response.json();
-                
+                const result = await res.json();
                 if (result.success) {
                     alert(`✅ ${filename} mis à jour avec succès ! Le site sera redéployé dans 2-3 minutes.`);
                 } else {
                     throw new Error('Échec de la sauvegarde');
                 }
-                
             } catch (error) {
                 console.error('Erreur:', error);
                 alert(`❌ Erreur : ${error.message}`);
             }
         }
 
-        // Lancer le chargement au démarrage
         window.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
