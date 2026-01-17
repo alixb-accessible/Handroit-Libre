@@ -612,7 +612,7 @@
                 return;
             }
             try {
-                const res = await fetch('/api/update-data', {
+                const res = await fetch('https://handipass.vercel.app/api/update-data', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({filename, content, password})
@@ -623,7 +623,7 @@
                 }
                 const result = await res.json();
                 if (result.success) {
-                    alert(`✅ ${filename} mis à jour avec succès ! Le site sera redéployé dans 2-3 minutes.`);
+                    alert(`✅ ${filename} mis à jour avec succès ! Les changements seront visibles dans quelques instants.`);
                 } else {
                     throw new Error('Échec de la sauvegarde');
                 }
