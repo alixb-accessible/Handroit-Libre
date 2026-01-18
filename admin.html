@@ -440,12 +440,12 @@
         async function loadData() {
             try {
                 // Charger depuis jsDelivr CDN (GitHub)
-                const themesResponse = await fetch('https://cdn.jsdelivr.net/gh/alixb-accessible/Handipass@main/public/themes-data.txt');
+                const themesResponse = await fetch('https://cdn.jsdelivr.net/gh/alixb-accessible/Handipass@main/public/themes-data.js');
                 const themesText = await themesResponse.text();
                 eval(themesText);
                 themeData = window.themeData;
 
-                const courriersResponse = await fetch('https://cdn.jsdelivr.net/gh/alixb-accessible/Handipass@main/public/courriers-templates.txt');
+                const courriersResponse = await fetch('https://cdn.jsdelivr.net/gh/alixb-accessible/Handipass@main/public/courriers-templates.js');
                 const courriersText = await courriersResponse.text();
                 eval(courriersText);
                 letterTemplates = window.letterTemplates;
@@ -502,13 +502,13 @@
 
         function toggleThemeAccess(themeId, isFree) {
             themeData[themeId].restricted = !isFree;
-            saveDataToFile('public/themes-data.txt', 'themeData', themeData);
+            saveDataToFile('public/themes-data.js', 'themeData', themeData);
             populateThemesList();
         }
 
         function toggleCourrierAccess(courrierId, isFree) {
             letterTemplates[courrierId].restricted = !isFree;
-            saveDataToFile('public/courriers-templates.txt', 'letterTemplates', letterTemplates);
+            saveDataToFile('public/courriers-templates.js', 'letterTemplates', letterTemplates);
             populateCouriersList();
         }
 
@@ -542,7 +542,7 @@
             themeData[themeId].title = document.getElementById('theme-title').value;
             themeData[themeId].description = document.getElementById('theme-description').value;
             themeData[themeId].content = document.getElementById('theme-content').value;
-            saveDataToFile('public/themes-data.txt', 'themeData', themeData);
+            saveDataToFile('public/themes-data.js', 'themeData', themeData);
             const msg = document.getElementById('theme-success');
             msg.textContent = 'Thématique enregistrée avec succès !';
             msg.classList.add('show');
@@ -594,7 +594,7 @@
             if (!courrierId) return;
             letterTemplates[courrierId].title = document.getElementById('courrier-title').value;
             letterTemplates[courrierId].template = document.getElementById('courrier-template').value;
-            saveDataToFile('public/courriers-templates.txt', 'letterTemplates', letterTemplates);
+            saveDataToFile('public/courriers-templates.js', 'letterTemplates', letterTemplates);
             const msg = document.getElementById('courrier-success');
             msg.textContent = 'Courrier enregistré avec succès !';
             msg.classList.add('show');
